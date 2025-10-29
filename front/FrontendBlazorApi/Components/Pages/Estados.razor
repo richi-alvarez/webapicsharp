@@ -1,0 +1,260 @@
+@page "/estados"
+@using System.Net.Http.Json
+@using FrontendBlazorApi.Models
+@inject IHttpClientFactory HttpFactory
+@inject IJSRuntime JSRuntime
+@rendermode InteractiveServer
+
+<PageTitle>Estados</PageTitle>
+
+<h3>Gestión de Estados</h3>
+
+@if (cargando)
+{
+    <p><em>Cargando estados…</em></p>
+}
+else if (!string.IsNullOrWhiteSpace(mensaje))
+{
+    <div class="@claseAviso" role="alert">@mensaje</div>
+}
+else if (listaEstados == null || listaEstados.Count == 0)
+{
+    <p>No hay estados disponibles.</p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nombre</th>
+                <th>Descripción</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var e in listaEstados)
+            {
+                <tr>
+                    <td>@e.Id</td>
+                    <td>@e.Nombre</td>
+                    <td>@e.Descripcion</td>
+                    <td>
+                        <button class="btn btn-sm btn-primary" @onclick="@(() => CargarEnFormulario(e))">Editar</button>
+                        <button class="btn btn-sm btn-danger" @onclick="@(() => EliminarEstado(e.Id))">Eliminar</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<hr />
+
+<h4>Formulario de Estado</h4>
+<EditForm Model="estadoActual" OnValidSubmit="GuardarEstado" FormName="EstadoForm">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="mb-3">
+        <label class="form-label">Nombre</label>
+        <InputText class="form-control" @bind-Value="estadoActual.Nombre" />
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Descripción</label>
+        <InputText class="form-control" @bind-Value="estadoActual.Descripcion" />
+    </div>
+
+    <button type="submit" class="btn btn-success">@botonTexto</button>
+    <button type="button" class="btn btn-secondary" @onclick="LimpiarFormulario">Nuevo</button>
+    <button type="button" class="btn btn-warning" @onclick="ActualizarEstado" disabled="@(!existeEstado)">Actualizar</button>
+</EditForm>
+
+@code {
+    private List<Estado> listaEstados = new();
+    private Estado estadoActual = new Estado();
+    private bool cargando = false;
+    private string mensaje = "";
+    private string claseAviso = "alert alert-info";
+    private string botonTexto = "Crear";
+    private bool existeEstado = false;
+    private const string urlApi = "api/estados";
+
+    protected override async Task OnInitializedAsync()
+    {
+        await CargarEstados();
+    }
+
+    private async Task CargarEstados()
+    {
+        cargando = true;
+        mensaje = "";
+        try
+        {
+            var cliente = HttpFactory.CreateClient();
+            cliente.BaseAddress = new Uri("http://localhost:5031/");
+            var respuesta = await cliente.GetFromJsonAsync<RespuestaApi<Estado>>(urlApi);
+            if (respuesta != null && respuesta.Datos != null)
+            {
+                listaEstados = respuesta.Datos;
+            }
+            else
+            {
+                mensaje = "No se obtuvieron estados.";
+                claseAviso = "alert alert-warning";
+            }
+        }
+        catch (Exception ex)
+        {
+            mensaje = $"Error al cargar estados: {ex.Message}";
+            claseAviso = "alert alert-danger";
+        }
+        finally
+        {
+            cargando = false;
+        }
+    }
+
+    private void CargarEnFormulario(Estado e)
+    {
+        estadoActual = new Estado
+        {
+            Id = e.Id,
+            Nombre = e.Nombre,
+            Descripcion = e.Descripcion
+        };
+        botonTexto = "Actualizar";
+        existeEstado = true;
+    }
+
+    private async Task GuardarEstado()
+    {
+        mensaje = "";
+        claseAviso = "alert alert-info";
+
+        try
+        {
+            var cliente = HttpFactory.CreateClient();
+            cliente.BaseAddress = new Uri("http://localhost:5031/");
+            HttpResponseMessage respuesta;
+
+            if (!existeEstado)
+            {
+                respuesta = await cliente.PostAsJsonAsync(urlApi, estadoActual);
+            }
+            else
+            {
+                await ActualizarEstado();
+                return;
+            }
+
+            if (respuesta.IsSuccessStatusCode)
+            {
+                mensaje = "Estado creado correctamente.";
+                claseAviso = "alert alert-success";
+                await CargarEstados();
+                LimpiarFormulario();
+            }
+            else
+            {
+                var detalle = await respuesta.Content.ReadAsStringAsync();
+                mensaje = $"Error al crear estado: {detalle}";
+                claseAviso = "alert alert-danger";
+            }
+        }
+        catch (Exception ex)
+        {
+            mensaje = $"Error al guardar estado: {ex.Message}";
+            claseAviso = "alert alert-danger";
+        }
+    }
+
+    private void LimpiarFormulario()
+    {
+        estadoActual = new Estado();
+        botonTexto = "Crear";
+        mensaje = "";
+        claseAviso = "alert alert-info";
+        existeEstado = false;
+    }
+
+    private async Task ActualizarEstado()
+    {
+        mensaje = "";
+        claseAviso = "alert alert-info";
+
+        if (string.IsNullOrWhiteSpace(estadoActual.Nombre))
+        {
+            mensaje = "Debe indicar un nombre válido para actualizar.";
+            claseAviso = "alert alert-warning";
+            return;
+        }
+
+        try
+        {
+            var cliente = HttpFactory.CreateClient();
+            cliente.BaseAddress = new Uri("http://localhost:5031/");
+            var ruta = $"{urlApi}/Id/{estadoActual.Id}";
+            var respuesta = await cliente.PutAsJsonAsync(ruta, estadoActual);
+
+            if (respuesta.IsSuccessStatusCode)
+            {
+                mensaje = "Estado actualizado correctamente.";
+                claseAviso = "alert alert-success";
+                await CargarEstados();
+                LimpiarFormulario();
+            }
+            else
+            {
+                var detalle = await respuesta.Content.ReadAsStringAsync();
+                mensaje = $"Error al actualizar estado: {detalle}";
+                claseAviso = "alert alert-danger";
+            }
+        }
+        catch (Exception ex)
+        {
+            mensaje = $"Error en la actualización: {ex.Message}";
+            claseAviso = "alert alert-danger";
+        }
+    }
+
+    private async Task EliminarEstado(int id)
+    {
+        if (id == 0)
+        {
+            mensaje = "El ID del estado es requerido para eliminar.";
+            claseAviso = "alert alert-warning";
+            return;
+        }
+
+        var confirmacion = await JSRuntime.InvokeAsync<bool>("confirm", $"¿Estás seguro de eliminar el estado con ID {id}?");
+        if (!confirmacion)
+            return;
+
+        try
+        {
+            var cliente = HttpFactory.CreateClient();
+            cliente.BaseAddress = new Uri("http://localhost:5031/");
+            var ruta = $"{urlApi}/Id/{id}";
+            var respuesta = await cliente.DeleteAsync(ruta);
+
+            if (respuesta.IsSuccessStatusCode)
+            {
+                mensaje = "Estado eliminado correctamente.";
+                claseAviso = "alert alert-success";
+                await CargarEstados();
+            }
+            else
+            {
+                var detalle = await respuesta.Content.ReadAsStringAsync();
+                mensaje = $"Error al eliminar estado: {detalle}";
+                claseAviso = "alert alert-danger";
+            }
+        }
+        catch (Exception ex)
+        {
+            mensaje = $"Error al eliminar estado: {ex.Message}";
+            claseAviso = "alert alert-danger";
+        }
+    }
+}

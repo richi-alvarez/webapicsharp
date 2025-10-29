@@ -1,0 +1,3 @@
+docker build -t webapicsharp:net9 .docker build -t webapicsharp:net9 .
+
+docker run -p 5031:5031 webapicsharp:net9

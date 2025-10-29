@@ -1,0 +1,128 @@
+services:
+  webapicsharp:
+    build: .
+    container_name: webapicsharp
+    ports:
+      - "5031:5031" # solo HTTP
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Development"
+
+      # 🔹 Conexión a Postgres
+      ConnectionStrings__Postgres: "Host=postgresdb;Port=5432;Database=postgresdb;Username=sa;Password=test;Pooling=true;Maximum Pool Size=100;"
+
+      # 🔹 Conexión a MariaDB
+      ConnectionStrings__MariaDB: "Server=mariadb;Port=3306;Database=mariadb;User=root;Password=test;"
+
+      # 🔹 Proveedor de BD
+      DatabaseProvider: "MariaDB" #"MariaDB"  #"SqlServer" # o  o "Postgres"
+    depends_on:
+      #- postgresdb
+      - mariadb
+      #- sqlserver
+    networks:
+      - local-network
+    healthcheck:
+      test: ["CMD", "/usr/local/bin/check-dbs.sh"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  # postgresdb:
+  #   image: postgres:15
+  #   container_name: postgresdb
+  #   restart: always
+  #   environment:
+  #     POSTGRES_USER: sa
+  #     POSTGRES_PASSWORD: test
+  #     POSTGRESDB: postgresdb
+  #     POSTGRES_DB: postgresdb
+  #   ports:
+  #     - "5432:5432"
+  #   volumes:
+  #     - ./docker/db/postgresdb.sql:/docker-entrypoint-initdb.d/postgresdb.sql
+  #     - ./docker/db/init-postgres.sh:/docker-entrypoint-initdb.d/init-postgres.sh
+  #     - postgres_data:/var/lib/postgresql/data
+  #   networks:
+  #     - local-network
+
+  # pgadmin:
+  #   image: dpage/pgadmin4:7
+  #   container_name: pgadmin
+  #   restart: always
+  #   environment:
+  #     PGADMIN_DEFAULT_EMAIL: admin@admin.com
+  #     PGADMIN_DEFAULT_PASSWORD: admin
+  #   ports:
+  #     - "8080:80"
+  #   depends_on:
+  #     - postgresdb
+  #   volumes:
+  #     - pgadmin_data:/var/lib/pgadmin
+  #   networks:
+  #     - local-network
+
+  mariadb:
+    image: mariadb:10.6.4-focal
+    container_name: mariadb
+    restart: always
+    command: --default-authentication-plugin=mysql_native_password --explicit_defaults_for_timestamp=1
+    environment:
+      MYSQL_DATABASE: mariadb
+      MYSQL_USER: appuser
+      MYSQL_PASSWORD: test
+      MYSQL_ROOT_PASSWORD: test
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./docker/db/mariadb.sql:/docker-entrypoint-initdb.d/mariadb.sql
+      - ./docker/db/init-mariadb.sh:/docker-entrypoint-initdb.d/init-mariadb.sh
+      - mariadb_data:/var/lib/mysql
+    networks:
+      - local-network
+
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    links:
+      - mariadb:mariadb
+    ports:
+      - 8089:80
+    restart: always
+    environment:
+        PMA_HOST: mariadb
+        MYSQL_USER: root
+        MYSQL_PASSWORD: test
+        MYSQL_ROOT_PASSWORD: test
+    depends_on:
+      - mariadb
+    networks:
+      - local-network
+
+  # sqlserver:
+  #   image: mcr.microsoft.com/mssql/server:2022-latest
+  #   container_name: sqlserver
+  #   ports:
+  #     - "1433:1433"
+  #   environment:
+  #     ACCEPT_EULA: "Y"
+  #     SA_PASSWORD: "YourStrong@Passw0rd"
+  #     MSSQL_PID: "Developer"
+  #   volumes:
+  #     - ./docker/db/init.sql:/docker-entrypoint-initdb.d/init.sql
+  #     - ./docker/db/init-sqlserver.sh:/docker-entrypoint-initdb.d/init-sqlserver.sh
+  #     - sqlserver_data:/var/opt/mssql
+  #   networks:
+  #     - local-network
+
+volumes:
+  #postgres_data:
+  #pgadmin_data:
+  mariadb_data:
+  #sqlserver_data:
+
+networks:
+  local-network:
+    driver: bridge
+
+
+

@@ -1,0 +1,71 @@
+is_global = true
+build_property.TargetFramework = net8.0
+build_property.TargetPlatformMinVersion = 
+build_property.UsingMicrosoftNETSdkWeb = true
+build_property.ProjectTypeGuids = 
+build_property.InvariantGlobalization = 
+build_property.PlatformNeutralAssembly = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property._SupportedPlatformList = Linux,macOS,Windows
+build_property.RootNamespace = FrontendBlazorApi
+build_property.RootNamespace = FrontendBlazorApi
+build_property.ProjectDir = /home/epayco21/Escritorio/webapicsharp/front/FrontendBlazorApi/
+build_property.EnableComHosting = 
+build_property.EnableGeneratedComInterfaceComImportInterop = 
+build_property.RazorLangVersion = 8.0
+build_property.SupportLocalizedComponentNames = 
+build_property.GenerateRazorMetadataSourceChecksumAttributes = 
+build_property.MSBuildProjectDirectory = /home/epayco21/Escritorio/webapicsharp/front/FrontendBlazorApi
+build_property._RazorSourceGeneratorDebug = 
+
+[/home/epayco21/Escritorio/webapicsharp/front/FrontendBlazorApi/Components/App.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9BcHAucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/epayco21/Escritorio/webapicsharp/front/FrontendBlazorApi/Components/Pages/Counter.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9QYWdlcy9Db3VudGVyLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/epayco21/Escritorio/webapicsharp/front/FrontendBlazorApi/Components/Pages/Entregables.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9QYWdlcy9FbnRyZWdhYmxlcy5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/epayco21/Escritorio/webapicsharp/front/FrontendBlazorApi/Components/Pages/Error.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9QYWdlcy9FcnJvci5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/epayco21/Escritorio/webapicsharp/front/FrontendBlazorApi/Components/Pages/Estados.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9QYWdlcy9Fc3RhZG9zLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/epayco21/Escritorio/webapicsharp/front/FrontendBlazorApi/Components/Pages/Home.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9QYWdlcy9Ib21lLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/epayco21/Escritorio/webapicsharp/front/FrontendBlazorApi/Components/Pages/TipoProyectos.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9QYWdlcy9UaXBvUHJveWVjdG9zLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/epayco21/Escritorio/webapicsharp/front/FrontendBlazorApi/Components/Pages/Usuarios.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9QYWdlcy9Vc3Vhcmlvcy5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/epayco21/Escritorio/webapicsharp/front/FrontendBlazorApi/Components/Pages/Weather.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9QYWdlcy9XZWF0aGVyLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/epayco21/Escritorio/webapicsharp/front/FrontendBlazorApi/Components/Routes.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9Sb3V0ZXMucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/epayco21/Escritorio/webapicsharp/front/FrontendBlazorApi/Components/_Imports.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9fSW1wb3J0cy5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/epayco21/Escritorio/webapicsharp/front/FrontendBlazorApi/Components/Layout/MainLayout.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9MYXlvdXQvTWFpbkxheW91dC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = b-brgx2lbcrv
+
+[/home/epayco21/Escritorio/webapicsharp/front/FrontendBlazorApi/Components/Layout/NavMenu.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9MYXlvdXQvTmF2TWVudS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = b-30x6oe2xam

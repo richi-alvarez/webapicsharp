@@ -1,0 +1,267 @@
+@page "/entregables"
+@using System.Net.Http.Json
+@using FrontendBlazorApi.Models
+@inject IHttpClientFactory HttpFactory
+@inject IJSRuntime JSRuntime
+@rendermode InteractiveServer
+
+<PageTitle>Entregables</PageTitle>
+
+<h3>Gestión de Entregables</h3>
+
+@if (cargando)
+{
+    <p><em>Cargando entregables…</em></p>
+}
+else if (!string.IsNullOrWhiteSpace(mensaje))
+{
+    <div class="@claseAviso" role="alert">@mensaje</div>
+}
+else if (listaEntregables == null || listaEntregables.Count == 0)
+{
+    <p>No hay entregables disponibles.</p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nombre</th>
+                <th>Fecha Entrega</th>
+                <th>Descripción</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var e in listaEntregables)
+            {
+                <tr>
+                    <td>@e.IdEntregable</td>
+                    <td>@e.Nombre</td>
+                    <td>@e.FechaEntrega.ToString("yyyy-MM-dd")</td>
+                    <td>@e.Descripcion</td>
+                    <td>
+                        <button class="btn btn-sm btn-primary" @onclick="@(() => CargarEnFormulario(e))">Editar</button>
+                        <button class="btn btn-sm btn-danger" @onclick="@(() => EliminarEntregable(e.IdEntregable))">Eliminar</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<hr />
+<h4>Formulario de Entregable</h4>
+<EditForm Model="entregableActual" OnValidSubmit="GuardarEntregable" FormName="EntregableForm">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="mb-3">
+        <label class="form-label">Nombre</label>
+        <InputText class="form-control" @bind-Value="entregableActual.Nombre" />
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Fecha Entrega</label>
+        <InputDate class="form-control" @bind-Value="entregableActual.FechaEntrega" />
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Descripción</label>
+        <InputText class="form-control" @bind-Value="entregableActual.Descripcion" />
+    </div>
+
+    <button type="submit" class="btn btn-success">@botonTexto</button>
+    <button type="button" class="btn btn-secondary" @onclick="LimpiarFormulario">Nuevo</button>
+    <button type="button" class="btn btn-warning" @onclick="ActualizarEntregable" disabled="@(!existeEntregable)">Actualizar</button>
+</EditForm>
+
+@code {
+    private List<Entregable> listaEntregables = new();
+    private Entregable entregableActual = new Entregable();
+    private bool cargando = false;
+    private string mensaje = "";
+    private string claseAviso = "alert alert-info";
+    private string botonTexto = "Crear";
+    private bool existeEntregable = false;
+
+    private const string urlApi = "api/entregables";
+
+    protected override async Task OnInitializedAsync()
+    {
+        await CargarEntregables();
+    }
+
+    private async Task CargarEntregables()
+    {
+        cargando = true;
+        mensaje = "";
+        try
+        {
+            var cliente = HttpFactory.CreateClient();
+            cliente.BaseAddress = new Uri("http://localhost:5031/");
+            var respuesta = await cliente.GetFromJsonAsync<RespuestaApi<Entregable>>(urlApi);
+            if (respuesta != null && respuesta.Datos != null)
+            {
+                listaEntregables = respuesta.Datos;
+            }
+            else
+            {
+                mensaje = "No se obtuvieron entregables.";
+                claseAviso = "alert alert-warning";
+            }
+        }
+        catch (Exception ex)
+        {
+            mensaje = $"Error al cargar entregables: {ex.Message}";
+            claseAviso = "alert alert-danger";
+        }
+        finally
+        {
+            cargando = false;
+        }
+    }
+
+    private void CargarEnFormulario(Entregable e)
+    {
+        entregableActual = new Entregable
+        {
+            IdEntregable = e.IdEntregable,
+            Nombre = e.Nombre,
+            FechaEntrega = e.FechaEntrega,
+            Descripcion = e.Descripcion
+        };
+        botonTexto = "Actualizar";
+        existeEntregable = true;
+    }
+
+    private async Task GuardarEntregable()
+    {
+        mensaje = "";
+        claseAviso = "alert alert-info";
+
+        try
+        {
+            var cliente = HttpFactory.CreateClient();
+            cliente.BaseAddress = new Uri("http://localhost:5031/");
+            HttpResponseMessage respuesta;
+
+            if (!existeEntregable)
+            {
+                respuesta = await cliente.PostAsJsonAsync(urlApi, entregableActual);
+            }
+            else
+            {
+                await ActualizarEntregable();
+                return;
+            }
+
+            if (respuesta.IsSuccessStatusCode)
+            {
+                mensaje = "Entregable creado correctamente.";
+                claseAviso = "alert alert-success";
+                await CargarEntregables();
+                LimpiarFormulario();
+            }
+            else
+            {
+                var detalle = await respuesta.Content.ReadAsStringAsync();
+                mensaje = $"Error al crear entregable: {detalle}";
+                claseAviso = "alert alert-danger";
+            }
+        }
+        catch (Exception ex)
+        {
+            mensaje = $"Error al guardar entregable: {ex.Message}";
+            claseAviso = "alert alert-danger";
+        }
+    }
+
+    private void LimpiarFormulario()
+    {
+        entregableActual = new Entregable();
+        botonTexto = "Crear";
+        mensaje = "";
+        claseAviso = "alert alert-info";
+        existeEntregable = false;
+    }
+
+    private async Task ActualizarEntregable()
+    {
+        mensaje = "";
+        claseAviso = "alert alert-info";
+
+        if (string.IsNullOrWhiteSpace(entregableActual.Nombre))
+        {
+            mensaje = "Debe indicar un nombre válido para actualizar.";
+            claseAviso = "alert alert-warning";
+            return;
+        }
+
+        try
+        {
+            var cliente = HttpFactory.CreateClient();
+            cliente.BaseAddress = new Uri("http://localhost:5031/");
+            var ruta = $"{urlApi}/IdEntregable/{entregableActual.IdEntregable}";
+            var respuesta = await cliente.PutAsJsonAsync(ruta, entregableActual);
+
+            if (respuesta.IsSuccessStatusCode)
+            {
+                mensaje = "Entregable actualizado correctamente.";
+                claseAviso = "alert alert-success";
+                await CargarEntregables();
+                LimpiarFormulario();
+            }
+            else
+            {
+                var detalle = await respuesta.Content.ReadAsStringAsync();
+                mensaje = $"Error al actualizar entregable: {detalle}";
+                claseAviso = "alert alert-danger";
+            }
+        }
+        catch (Exception ex)
+        {
+            mensaje = $"Error en la actualización: {ex.Message}";
+            claseAviso = "alert alert-danger";
+        }
+    }
+
+    private async Task EliminarEntregable(int id)
+    {
+        if (id == 0)
+        {
+            mensaje = "El ID del entregable es requerido para eliminar.";
+            claseAviso = "alert alert-warning";
+            return;
+        }
+
+        var confirmacion = await JSRuntime.InvokeAsync<bool>("confirm", $"¿Estás seguro de eliminar el entregable con ID {id}?");
+        if (!confirmacion)
+            return;
+
+        try
+        {
+            var cliente = HttpFactory.CreateClient();
+            cliente.BaseAddress = new Uri("http://localhost:5031/");
+            var ruta = $"{urlApi}/IdEntregable/{id}";
+            var respuesta = await cliente.DeleteAsync(ruta);
+
+            if (respuesta.IsSuccessStatusCode)
+            {
+                mensaje = "Entregable eliminado correctamente.";
+                claseAviso = "alert alert-success";
+                await CargarEntregables();
+            }
+            else
+            {
+                var detalle = await respuesta.Content.ReadAsStringAsync();
+                mensaje = $"Error al eliminar entregable: {detalle}";
+                claseAviso = "alert alert-danger";
+            }
+        }
+        catch (Exception ex)
+        {
+            mensaje = $"Error al eliminar entregable: {ex.Message}";
+            claseAviso = "alert alert-danger";
+        }
+    }
+}

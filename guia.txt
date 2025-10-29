@@ -1,0 +1,102 @@
+*Estructura del proyecto Back
+
+back/
+│
+├── Dockerfile
+├── docker-compose.yml
+├── webapicsharp.csproj
+├── webapicsharp.http
+├── webapicsharp.sln
+├── Program.cs
+├── appsettings.Development.json
+├── appsettings.json
+├── check-dbs.sh
+└── docker/
+    └── check-dbs.sh
+└── ...
+
+*Configurar la conexión a la base de datos
+
+"ConnectionStrings": {
+    "SqlServer": "Server=sqlserver,1433;Database=sqlserverdb;User Id=sa;Password=YourStrong@Passw0rd;TrustServerCertificate=True;",
+    "SqlServerEXPRESS": "Server=sqlserver,1433;Database=sqlserverdb;User Id=sa;Password=YourStrong@Passw0rd;TrustServerCertificate=True;",
+    "LocalDb": "Server=sqlserver,1433;Database=sqlserverdb;User Id=sa;Password=YourStrong@Passw0rd;TrustServerCertificate=True;",
+    "Postgres": "Host=postgresdb;Port=5432;Database=postgresdb;Username=sa;Password=test;Pooling=true;Maximum Pool Size=100;",
+    "MariaDB": "Server=mariadb;Port=3306;Database=mysqldb;User=root;Password=test;"
+}
+"DatabaseProvider": "MariaDB"
+
+---------------------------------------------------------------------------------
+Paso 1 levantamiento del back
+
+*Construir la imagen de la API
+docker-compose build
+
+*Levantar los contenedores
+docker-compose up
+
+
+*Verificar la conexión
+Abre en el navegador o con curl:
+http://localhost:5031/swagger
+
+*Verificar la conexión a la bd
+Abre en el navegador:
+http://localhost:8089
+usuario: root
+contraseña: test
+---------------------------------------------------------------------------------
+Paso 2 levantamiento del Front
+
+*Estructura del proyecto Front Blazor
+
+Front/
+├── MiBlazorApp.csproj
+├── wwwroot/
+│   ├── css/
+│   ├── js/
+│   └── favicon.ico
+├── Components/
+│   └── App.razor
+│   ├── Index.razor
+│   ├── Error.razor
+│   └── … otros archivos .razor con @page
+├── Models/
+│   └── Entregable.cs, Estados.cs, RespuestaApi.cs, etc.
+├── _Imports.razor
+├── Program.cs
+├── appsettings.json
+└── appsettings.Development.json
+
+*contruir proyecto
+dotnet build
+
+*correr proyecto
+dotnet run
+
+---------------------------------------------------------------------------------
+Paso 2 levantamiento del React
+
+*Estructura del proyecto React Blazor
+
+Front/
+├── MiBlazorApp.csproj
+├── node_modules/
+│   └── .. librerias de node
+├── src/
+│   ├── api
+│   ├── assets
+│   ├── pages
+|   ├── App.js
+│   └── inddex.js
+├── public/
+|   ├── index.html
+│   └── manifest.json
+├── package-lock.json
+└── package.json
+
+*instawlar dependencias
+npm install
+
+*correr proyecto
+npm run start

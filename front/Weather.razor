@@ -1,0 +1,87 @@
+﻿@page "/weather"
+@attribute [StreamRendering]
+@using System.Net.Http.Json
+@using FrontendBlazorApi.Models
+@inject IHttpClientFactory fabricaHttp
+@rendermode InteractiveServer
+
+<PageTitle>Weather</PageTitle>
+
+<h1>Weather</h1>
+
+<p>This component demonstrates showing data.</p>
+
+@if (cargando)
+{
+    <p><em>Cargando datos...</em></p>
+}
+else if (!string.IsNullOrEmpty(mensaje))
+{
+    <div class="@claseAviso">@mensaje</div>
+}
+else if (forecasts == null || forecasts.Count == 0)
+{
+    <p><em>No se encontraron registros.</em></p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Temp. (C)</th>
+                <th>Temp. (F)</th>
+                <th>Summary</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var forecast in forecasts)
+            {
+                <tr>
+                    <td>@forecast.Date.ToShortDateString()</td>
+                    <td>@forecast.TemperatureC</td>
+                    <td>@forecast.TemperatureF</td>
+                    <td>@forecast.Summary</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<WeatherForecast> forecasts = new();
+    private bool cargando = false;
+    private string mensaje = string.Empty;
+    private string claseAviso = "alert alert-info";
+    private const string urlBaseApi = "api/WeatherForecast";
+
+    protected override async Task OnInitializedAsync()
+    {
+        cargando = true;
+
+        try
+        {
+            var cliente = fabricaHttp.CreateClient("ApiUsuarios");
+            var respuesta = await cliente.GetFromJsonAsync<RespuestaApi<WeatherForecast>>(urlBaseApi);
+
+            if (respuesta != null && respuesta.Datos != null)
+            {
+                forecasts = respuesta.Datos;
+            }
+            else
+            {
+                mensaje = "No se recibieron datos del servidor.";
+                claseAviso = "alert alert-warning";
+            }
+        }
+        catch (Exception ex)
+        {
+            mensaje = $"Error al cargar datos: {ex.Message}";
+            claseAviso = "alert alert-danger";
+        }
+        finally
+        {
+            cargando = false;
+        }
+    }
+}

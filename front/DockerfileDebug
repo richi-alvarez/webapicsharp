@@ -1,0 +1,32 @@
+# Etapa base para .NET
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
+WORKDIR /app
+EXPOSE 5106
+
+# SDK para compilar
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+WORKDIR /src
+COPY FrontendBlazorApi/FrontendBlazorApi.csproj ./FrontendBlazorApi/
+RUN dotnet restore ./FrontendBlazorApi/FrontendBlazorApi.csproj
+COPY FrontendBlazorApi/. ./FrontendBlazorApi/
+WORKDIR /src/FrontendBlazorApi
+RUN dotnet build FrontendBlazorApi.csproj -c Release -o /app/build
+
+FROM build AS publish
+WORKDIR /src/FrontendBlazorApi
+RUN dotnet publish FrontendBlazorApi.csproj -c Release -o /app/publish /p:UseAppHost=false
+
+# Imagen final
+FROM base AS final
+WORKDIR /app
+
+# Instalar curl
+RUN apt-get update && apt-get install -y curl
+
+COPY --from=publish /app/publish .
+
+ENV ASPNETCORE_URLS=http://+:5106
+ENV DOTNET_RUNNING_IN_CONTAINER=true
+ENV DOTNET_USE_POLLING_FILE_WATCHER=true
+
+ENTRYPOINT ["dotnet", "FrontendBlazorApi.dll"]

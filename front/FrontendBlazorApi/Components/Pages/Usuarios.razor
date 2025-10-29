@@ -1,0 +1,258 @@
+@page "/usuarios"
+@using System.Net.Http.Json
+@using FrontendBlazorApi.Models
+@inject IHttpClientFactory HttpFactory
+@inject IJSRuntime JSRuntime
+@rendermode InteractiveServer
+<PageTitle>Usuarios</PageTitle>
+
+<h3>Gestión de Usuarios</h3>
+
+@if (cargando)
+{
+    <p><em>Cargando usuarios…</em></p>
+}
+else if (!string.IsNullOrWhiteSpace(mensaje))
+{
+    <div class="@claseAviso" role="alert">@mensaje</div>
+}
+else if (listaUsuarios == null || listaUsuarios.Count == 0)
+{
+    <p>No hay usuarios disponibles.</p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Email</th>
+                <th>RutaAvatar</th>
+                <th>Activo</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var u in listaUsuarios)
+            {
+                <tr>
+                    <td>@u.Id</td>
+                    <td>@u.Email</td>
+                    <td>@u.RutaAvatar</td>
+                    <td>@(u.Activo ? "Sí" : "No")</td>
+                    <td>
+                        <button class="btn btn-sm btn-primary" @onclick="@(() => CargarEnFormulario(u))">Editar</button>
+                        <button class="btn btn-sm btn-danger" @onclick="@(() => EliminarUsuario(u.Email))">Eliminar</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+<hr />
+<h4>Formulario de Usuario</h4>
+<EditForm Model="usuarioActual" OnValidSubmit="GuardarUsuario" FormName="UsuarioForm">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <div class="mb-3">
+        <label class="form-label">Email</label>
+        <InputText class="form-control" @bind-Value="usuarioActual.Email" />
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Contraseña</label>
+        <InputText class="form-control" @bind-Value="usuarioActual.Contrasena" type="password" />
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Ruta Avatar</label>
+        <InputText class="form-control" @bind-Value="usuarioActual.RutaAvatar" />
+    </div>
+    <div class="mb-3 form-check">
+        <InputCheckbox class="form-check-input" @bind-Value="usuarioActual.Activo" />
+        <label class="form-check-label">Activo</label>
+    </div>
+    <button type="submit" class="btn btn-success">@botonTexto</button>
+    <button type="button" class="btn btn-secondary" @onclick="LimpiarFormulario">Nuevo</button>
+    <button type="button" class="btn btn-warning" @onclick="ActualizarUsuario" disabled="@(!existeUsuario)">Actualizar</button>
+</EditForm>
+
+@code {
+    private List<Usuario> listaUsuarios = new();
+    private Usuario usuarioActual = new Usuario();
+    private bool cargando = false;
+    private string mensaje = "";
+    private string claseAviso = "alert alert-info";
+    private string botonTexto = "Crear";
+    private bool existeUsuario = false;
+    private const string urlApi = "api/usuarios";
+    protected override async Task OnInitializedAsync()
+    {
+        await CargarUsuarios();
+    }
+    private async Task CargarUsuarios()
+    {
+        cargando = true;
+        mensaje = "";
+        try
+        {
+            var cliente = HttpFactory.CreateClient();
+            cliente.BaseAddress = new Uri("http://localhost:5031/");
+            var respuesta = await cliente.GetFromJsonAsync<RespuestaApi<Usuario>>(urlApi);
+            if (respuesta != null && respuesta.Datos != null)
+            {
+                listaUsuarios = respuesta.Datos;
+            }
+            else
+            {
+                mensaje = "No se obtuvieron usuarios.";
+                claseAviso = "alert alert-warning";
+            }
+        }
+        catch (Exception ex)
+        {
+            mensaje = $"Error al cargar usuarios: {ex.Message}";
+            claseAviso = "alert alert-danger";
+        }
+        finally
+        {
+            cargando = false;
+        }
+    }
+    private void CargarEnFormulario(Usuario u)
+    {
+        usuarioActual = new Usuario
+        {
+            Id = u.Id,
+            Email = u.Email,
+            Contrasena = u.Contrasena,
+            RutaAvatar = u.RutaAvatar,
+            Activo = u.Activo
+        };
+        botonTexto = "Actualizar";
+        existeUsuario = true;
+    }
+    private async Task GuardarUsuario()
+    {
+        mensaje = "";
+        claseAviso = "alert alert-info";
+        try
+        {
+            var cliente = HttpFactory.CreateClient();
+            cliente.BaseAddress = new Uri("http://localhost:5031/");
+            HttpResponseMessage respuesta;
+            if (!existeUsuario)
+            {
+                respuesta = await cliente.PostAsJsonAsync(urlApi, usuarioActual);
+            }
+            else
+            {
+                await ActualizarUsuario();
+                return;
+            }
+            if (respuesta.IsSuccessStatusCode)
+            {
+                mensaje = "Usuario creado correctamente.";
+                claseAviso = "alert alert-success";
+                await CargarUsuarios();
+                LimpiarFormulario();
+            }
+            else
+            {
+                var detalle = await respuesta.Content.ReadAsStringAsync();
+                mensaje = $"Error en la creación: {detalle}";
+                claseAviso = "alert alert-danger";
+            }
+        }
+        catch (Exception ex)
+        {
+            mensaje = $"Error al guardar usuario: {ex.Message}";
+            claseAviso = "alert alert-danger";
+        }
+    }
+    private void LimpiarFormulario()
+    {
+        usuarioActual = new Usuario();
+        botonTexto = "Crear";
+        mensaje = "";
+        claseAviso = "alert alert-info";
+        existeUsuario = false;
+    }
+    private async Task ActualizarUsuario()
+    {
+        mensaje = "";
+        claseAviso = "alert alert-info";
+        if (string.IsNullOrWhiteSpace(usuarioActual.Email))
+        {
+            mensaje = "Debe indicar un email válido para actualizar.";
+            claseAviso = "alert alert-warning";
+            return;
+        }
+        try
+        {
+            var cliente = HttpFactory.CreateClient();
+            cliente.BaseAddress = new Uri("http://localhost:5031/");
+            var ruta = $"{urlApi}/Id/{usuarioActual.Id}";
+            var payload = new
+            {
+                Email = usuarioActual.Email,
+                Contrasena = usuarioActual.Contrasena,
+                RutaAvatar = usuarioActual.RutaAvatar,
+                Activo = usuarioActual.Activo
+            };
+            var respuesta = await cliente.PutAsJsonAsync(ruta, payload);
+            if (respuesta.IsSuccessStatusCode)
+            {
+                mensaje = "Usuario actualizado correctamente.";
+                claseAviso = "alert alert-success";
+                await CargarUsuarios();
+                LimpiarFormulario();  // opcional: limpiar formulario después de actualizar
+            }
+            else
+            {
+                var detalle = await respuesta.Content.ReadAsStringAsync();
+                mensaje = $"Error al actualizar usuario: {detalle}";
+                claseAviso = "alert alert-danger";
+            }
+        }
+        catch (Exception ex)
+        {
+            mensaje = $"Error en la actualización: {ex.Message}";
+            claseAviso = "alert alert-danger";
+        }
+    }
+    private async Task EliminarUsuario(string email)
+{
+    if (string.IsNullOrWhiteSpace(email))
+    {
+        mensaje = "El correo electrónico es requerido para eliminar el usuario.";
+        claseAviso = "alert alert-warning";
+        return;
+    }
+    var confirmacion = await JSRuntime.InvokeAsync<bool>("confirm", $"¿Estás seguro de eliminar el usuario con correo {email}?");
+    if (!confirmacion)
+        return;
+    try
+    {
+        var cliente = HttpFactory.CreateClient();
+        cliente.BaseAddress = new Uri("http://localhost:5031/");
+        var ruta = $"api/usuarios/email/{Uri.EscapeDataString(email)}";
+        var respuesta = await cliente.DeleteAsync(ruta);
+        if (respuesta.IsSuccessStatusCode)
+        {
+            mensaje = "Usuario eliminado correctamente.";
+            claseAviso = "alert alert-success";
+            await CargarUsuarios();
+        }
+        else
+        {
+            var detalle = await respuesta.Content.ReadAsStringAsync();
+            mensaje = $"Error al eliminar usuario: {detalle}";
+            claseAviso = "alert alert-danger";
+        }
+    }
+    catch (Exception ex)
+    {
+        mensaje = $"Error al eliminar usuario: {ex.Message}";
+        claseAviso = "alert alert-danger";
+    }
+}
+}
