@@ -14,6 +14,7 @@ import Responsable from './pages/Responsable.jsx';
 import ProyectoPage from './pages/ProyectoPage.jsx';
 import EstadoProyecto from './pages/EstadoProyecto.jsx';
 import TipoProducto from './pages/TipoProducto.jsx';
+import ProductoPage from './pages/ProductoPage.jsx';
 // puedes agregar más páginas, por ejemplo TipoProyectosPage, etc.
 
 function App() {
@@ -41,6 +42,8 @@ function App() {
           {' | '}
           <Link to="/tipoproducto">Tipo Producto</Link>
           {' | '}
+          <Link to="/productos">Productos</Link>
+          {' | '}
           <Link to="/logout">Log-out</Link>
         </nav>
         <Routes>
@@ -57,6 +60,7 @@ function App() {
             <Route path="/proyectos" element={<ProyectoPage />} />
             <Route path="/estadoproyecto" element={<EstadoProyecto />} />
             <Route path="/tipoproducto" element={<TipoProducto />} />
+            <Route path="/productos" element={<ProductoPage />} />
           </Route>
           <Route path="*" element={<LoginPage />} />
         </Routes>
