@@ -106,13 +106,20 @@ function ProyectoPage() {
                 data.map(async (proyecto) => {
                     // Aquí puedes agregar llamadas adicionales para obtener datos vinculados si es necesario
                     let responsables = null;
-                    if (Array.isArray(responsable)) {
+                    if(proyecto.IdResponsable){
+                        responsables = await get(`/Responsable/Id/${proyecto.IdResponsable}`, token);
+                    }
+                    /*if (Array.isArray(responsable)) {
                         responsables = responsable.filter((r) => r.Id === proyecto.IdResponsable);
                     }
+                    */
                     let tipoProyectos = null;
-                    if (Array.isArray(tipoProyecto)) {
-                        tipoProyectos = tipoProyecto.filter((tp) => tp.Id === proyecto.IdTipoProyecto);
+                    if(proyecto.IdTipoProyecto){    
+                        tipoProyectos = await get(`/TipoProyecto/Id/${proyecto.IdTipoProyecto}`, token);
                     }
+                    /*if (Array.isArray(tipoProyecto)) {
+                        tipoProyectos = tipoProyecto.filter((tp) => tp.Id === proyecto.IdTipoProyecto);
+                    }*/
                     let proyectoPadre = null;
                     if(proyecto.IdProyectoPadre){
                         proyectoPadre = await get(`/Proyecto/Id/${proyecto.IdTipoProyecto}`, token);

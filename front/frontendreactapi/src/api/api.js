@@ -96,9 +96,9 @@ export async function post(path, model, token) {
     }
 }
 
-export async function put(path, Id, model, esquema = null,token) {
+export async function put(path, Id, model, esquema = null,token, query='Id') {
     try {
-        const url = `${BASE_URL + path}/Id/${encodeURIComponent(Id)}${esquema || ''}`;
+        const url = `${BASE_URL + path}/${query}/${encodeURIComponent(Id)}${esquema || ''}`;
         const resp = await fetch(url, {
             method: "PUT",
             headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
@@ -127,9 +127,9 @@ export async function put(path, Id, model, esquema = null,token) {
     }
 }
 
-export async function del(path, Id,token) {
+export async function del(path, Id,token, query='Id') {
     try {
-        const url = `${BASE_URL + path}/Id/${encodeURIComponent(Id)}`;
+        const url = `${BASE_URL + path}/${query}/${encodeURIComponent(Id)}`;
         const resp = await fetch(url, { 
             method: "DELETE",
             headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` }
