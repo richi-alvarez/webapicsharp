@@ -8,12 +8,11 @@ const LoginPage = () => {
     const { login, loading } = useAuth();
     const navigate = useNavigate();
     const [error, setError] = useState(null);
-    
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
             const result = await login(username, password);
-            console.log(result);
             if(result && result.estado == 200){
                 navigate("/"); // Redirigir a la página de inicio después del registro
             }
@@ -22,7 +21,13 @@ const LoginPage = () => {
         }
     };
     if (loading) {
-        return <div>Loading...</div>; // or a spinner
+        return (
+            <div className="d-flex justify-content-center p-4">
+                    <div className="spinner-border" role="status">
+                        <span className="visually-hidden">Cargando responsables...</span>
+                    </div>
+                </div>
+        ); // or a spinner
     }
     return (
         <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>

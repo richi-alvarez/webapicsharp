@@ -18,10 +18,9 @@ const useFetch = (url, method = 'GET') => {
         }
         try{
             // ✅ ESPERAR 5 SEGUNDOS ANTES DE HACER LA PETICIÓN
-            console.log("Esperando 5 segundos...");
-            await new Promise(resolve => setTimeout(resolve, 5000));
+            console.log("Esperando 2 segundos...");
+            await new Promise(resolve => setTimeout(resolve, 2000));
             
-            console.log("Realizando petición...");
             const response = await fetch(`${BASE_URL+url}`, {
              method: method,
                 headers: {
@@ -40,7 +39,6 @@ const useFetch = (url, method = 'GET') => {
                 throw error;
             }
             const data = await response.json();
-            console.log("Petición exitosa:", data);
             successCb(data, data.estado || 200);
             return data;
         } catch (error) {

@@ -6,9 +6,9 @@ const TipoResponsableRow = memo(({tipoResponsable, onEdit, onDelete, token}) => 
     <tr>
         <td>{tipoResponsable.Titulo}</td>
         <td>{tipoResponsable.Descripcion}</td>
-        <td class="d-grid gap-2 d-md-flex justify-content-md-end">
-            <button class="btn btn-warning" onClick={() => onEdit(tipoResponsable, token)}>Editar</button>
-            <button class="btn btn-danger" onClick={() => onDelete(tipoResponsable.Id, token)}>Eliminar</button>
+        <td className="d-grid gap-2 d-md-flex justify-content-md-end">
+            <button className="btn btn-warning" onClick={() => onEdit(tipoResponsable, token)}>Editar</button>
+            <button className="btn btn-danger" onClick={() => onDelete(tipoResponsable.Id, token)}>Eliminar</button>
         </td>
     </tr>
 ));

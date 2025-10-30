@@ -10,7 +10,8 @@ import EntregablesPage from './pages/EntregablesPage';
 import { RegisterPage } from './pages/RegisterPage';
 import LogoutPage  from './pages/LogoutPage.jsx';
 import TipoResponsable from './pages/TipoResponsable.jsx';
-import Responsable from './pages/Responsable.jsx';
+import Responsable from './pages/Responsable.jsx'; 
+import ProyectoPage from './pages/ProyectoPage.jsx';
 // puedes agregar más páginas, por ejemplo TipoProyectosPage, etc.
 
 function App() {
@@ -32,6 +33,8 @@ function App() {
           {' | '}
           <Link to="/register">Register</Link>
           {' | '}
+          <Link to="/proyectos">Proyectos</Link>
+          {' | '}
           <Link to="/logout">Log-out</Link>
         </nav>
         <Routes>
@@ -45,6 +48,7 @@ function App() {
             <Route path="/tipoproyectos" element={<TipoProyectoPage />} />
             <Route path="/estados" element={<EstadoPage />} />
             <Route path="/entregables" element={<EntregablesPage />} />
+            <Route path="/proyectos" element={<ProyectoPage />} />
           </Route>
           <Route path="*" element={<LoginPage />} />
         </Routes>

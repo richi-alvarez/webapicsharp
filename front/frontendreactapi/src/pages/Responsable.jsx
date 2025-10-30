@@ -41,18 +41,17 @@ function Responsable() {
         if (!token) return;
         
         try {
+            //tablas vinculadas
             // Cargar tipos de responsable
             const tiposData = await get('/TipoResponsable', token);
             if (Array.isArray(tiposData)) {
                 setTiposResponsable(tiposData);
-                console.log("Tipos de responsable cargados:", tiposData);
             }
 
             // Cargar usuarios
             const usuariosData = await get('/Usuario', token);
             if (Array.isArray(usuariosData)) {
                 setUsuarios(usuariosData);
-                console.log("Usuarios cargados:", usuariosData);
             }
         } catch (error) {
             console.error("Error al cargar datos iniciales:", error);
@@ -106,9 +105,7 @@ function Responsable() {
                 })
             );
 
-            setResponsables(responsablesCompletos);
-            console.log("Responsables completos cargados:", responsablesCompletos);
-            
+            setResponsables(responsablesCompletos);            
         } catch (err) {
             console.error("Error al cargar responsables:", err);
             setMensaje(`Error: ${err.message}`);
@@ -177,10 +174,10 @@ function Responsable() {
 
         try {
             if (!esEdicion) {
-                await post('/Responsable', responsableActual);
+                await post('/Responsable', responsableActual,token);
                 setMensaje('Responsable creado correctamente.');
             } else {
-                await put('/Responsable', responsableActual.Id, responsableActual);
+                await put('/Responsable', responsableActual.Id, responsableActual, null, token);
                 setMensaje('Responsable actualizado correctamente.');
             }
             await cargarResponsables();
@@ -195,7 +192,7 @@ function Responsable() {
         if (!confirmado) return;
         
         try {
-            await del('/Responsable', id);
+            await del('/Responsable', id, token);
             setMensaje('Responsable eliminado correctamente.');
             await cargarResponsables();
         } catch (err) {

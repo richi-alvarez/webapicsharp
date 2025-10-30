@@ -99,7 +99,7 @@ const register = async (email, password, avatar, activo) => {
                 console.error("Error en registro:", error);
                 reject(error);
             }
-        }, 3000);
+        }, 1000);
     });
 };
 
