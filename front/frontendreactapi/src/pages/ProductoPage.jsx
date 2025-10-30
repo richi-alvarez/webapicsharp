@@ -239,7 +239,7 @@ function ProductoPage() {
 
     return (
         <div className="container mt-4">
-            <h2>Gestión de Proyectos</h2>
+            <h2>Gestión de Productos</h2>
             {mensaje && <div className="alert alert-info">{mensaje}</div>}
             <form onSubmit={guardarProyecto} className="mb-4">
                 <div className="mb-3">
@@ -291,7 +291,7 @@ function ProductoPage() {
                     <label className="form-label">RutaLogo</label>
                     <input type="text" className="form-control" name="RutaLogo" value={proyectoActual.RutaLogo} onChange={manejarCambio} />
                 </div>
-                <button type="submit" className="btn btn-primary">{esEdicion ? 'Actualizar Proyecto' : 'Crear Proyecto'}</button>
+                <button type="submit" className="btn btn-primary">{esEdicion ? 'Actualizar Producto' : 'Crear Producto'}</button>
                 <button type="button" className="btn btn-secondary ms-2" onClick={limpiarFormulario}>Limpiar</button>
             </form>
 
