@@ -8,7 +8,9 @@ import TipoProyectoPage from './pages/TipoProyectoPage';
 import EstadoPage from './pages/EstadoPage';
 import EntregablesPage from './pages/EntregablesPage';
 import { RegisterPage } from './pages/RegisterPage';
-import { LogoutPage } from './pages/LogoutPage.jsx';
+import LogoutPage  from './pages/LogoutPage.jsx';
+import TipoResponsable from './pages/TipoResponsable.jsx';
+import Responsable from './pages/Responsable.jsx';
 // puedes agregar más páginas, por ejemplo TipoProyectosPage, etc.
 
 function App() {
@@ -24,6 +26,10 @@ function App() {
           {' | '}
           <Link to="/entregables">Entregables</Link>
           {' | '}
+          <Link to="/tiporesponsable">Tipos de Responsable</Link>
+          {' | '}
+          <Link to="/responsable">Responsables</Link>
+          {' | '}
           <Link to="/register">Register</Link>
           {' | '}
           <Link to="/logout">Log-out</Link>
@@ -34,6 +40,8 @@ function App() {
           <Route path="/logout" element={<LogoutPage />} />
           <Route element={<ProtectedRoute />} >
             <Route path="/usuarios" element={<UsuariosPage />} />
+            <Route path="/tiporesponsable" element={<TipoResponsable />} />
+            <Route path="/responsable" element={<Responsable />} />
             <Route path="/tipoproyectos" element={<TipoProyectoPage />} />
             <Route path="/estados" element={<EstadoPage />} />
             <Route path="/entregables" element={<EntregablesPage />} />

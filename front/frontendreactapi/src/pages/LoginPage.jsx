@@ -1,14 +1,14 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 const LoginPage = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    const { login } = useAuth();
+    const { login, loading } = useAuth();
     const navigate = useNavigate();
     const [error, setError] = useState(null);
-
+    
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
@@ -21,7 +21,9 @@ const LoginPage = () => {
             setError("Invalid username or password");
         }
     };
-
+    if (loading) {
+        return <div>Loading...</div>; // or a spinner
+    }
     return (
         <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
             <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", width: "300px" }}>

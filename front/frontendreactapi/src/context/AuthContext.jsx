@@ -14,8 +14,8 @@ export const AuthProvider = ({children}) => {
         if (storedToken) {
             setToken(storedToken);
         }
-    
     }, []);
+
 
     const activedAvatar = async (email,contrasena) => {
         return new Promise((resolve, reject) => {
@@ -30,23 +30,25 @@ export const AuthProvider = ({children}) => {
                     }, 
                     null, 
                     (data) => {
-                        console.log("Login user data:", data);
                         localStorage.setItem("authToken", data.token);
                         setToken(data.token);
                         resolve(data);
+                    },
+                    (error) => {
+                        console.error("Error en activar usuario:", error);
+                        reject(error);
                     }
                 );
             } catch (error) {
                 console.error("Error en registro:", error);
                 reject(error);
             }
-        }, 3000);
+        }, 1000);
     });
     };
 
     const login = async (email,contrasena) => {
-        return new Promise((resolve, reject) => {
-        setTimeout(async () => {
+        return new Promise(async (resolve, reject) => {
             try {
                 await makeLogin(
                     { 
@@ -61,14 +63,17 @@ export const AuthProvider = ({children}) => {
                         localStorage.setItem("authToken", data.token);
                         setToken(data.token);
                         resolve(data);
+                    },
+                    (error) => {
+                        console.error("Error en login:", error);
+                        reject(error);
                     }
                 );
             } catch (error) {
                 console.error("Error en registro:", error);
                 reject(error);
             }
-        }, 3000);
-    });
+        });
     };
 
     const logout = () => {

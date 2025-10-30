@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useCallback, useMemo, memo } from 'react';
-import { fetchUsuarios, crearUsuario, actualizarUsuarioPorId, eliminarUsuarioPorId } from '../api/usuarios';
+import { get, post, put, del } from '../api/api';
 import { useAuth } from '../context/AuthContext';
 // ✅ Fila memorizada: solo se re-renderiza si cambia el usuario
-const UsuarioRow = memo(({ usuario, onEdit, onDelete }) => (
+const UsuarioRow = memo(({ usuario, onEdit, onDelete, token }) => (
 
     <tr>
         <td>{usuario.Email}</td>
@@ -10,8 +10,8 @@ const UsuarioRow = memo(({ usuario, onEdit, onDelete }) => (
         <td>{usuario.RutaAvatar}</td>
         <td>{usuario.Activo ? 'Sí' : 'No'}</td>
         <td class="d-grid gap-2 d-md-flex justify-content-md-end">
-            <button class="btn btn-warning" onClick={() => onEdit(usuario)}>Editar</button>
-            <button class="btn btn-danger" onClick={() => onDelete(usuario.Id)}>Eliminar</button>
+            <button class="btn btn-warning" onClick={() => onEdit(usuario,token)}>Editar</button>
+            <button class="btn btn-danger" onClick={() => onDelete(usuario.Id,token)}>Eliminar</button>
         </td>
     </tr>
 ));
@@ -34,7 +34,7 @@ function UsuariosPage() {
     const cargarUsuarios = useCallback(async () => {
         setCargando(true);
         try {
-            const data = await fetchUsuarios('/Usuario', token);
+            const data = await get('/Usuario', token);
             setUsuarios(Array.isArray(data) ? data : []);
         } catch (err) {
             setMensaje(`Error: ${err.message}`);
@@ -55,7 +55,7 @@ function UsuariosPage() {
         }));
     }, []);
 
-    const prepararEdicion = useCallback((usuario) => {
+    const prepararEdicion = useCallback((usuario, token) => {
         setUsuarioActual(usuario);
         setEsEdicion(true);
         setMensaje('');
@@ -78,10 +78,10 @@ function UsuariosPage() {
             e.preventDefault();
             try {
                 if (!esEdicion) {
-                    await crearUsuario(window.location.pathname,usuarioActual);
+                    await post('/Usuario?esquema=valor&camposEncriptar=Contrasena',usuarioActual, token);
                     setMensaje('Usuario creado correctamente.');
                 } else {
-                    await actualizarUsuarioPorId(window.location.pathname,usuarioActual.Id, usuarioActual);
+                    await put('/Usuario',usuarioActual.Id, usuarioActual, '?esquema=valor&camposEncriptar=Contrasena', token);
                     setMensaje('Usuario actualizado correctamente.');
                 }
                 await cargarUsuarios();
@@ -94,11 +94,11 @@ function UsuariosPage() {
     );
 
     const eliminarUsuario = useCallback(
-        async (Id) => {
+        async (Id, token) => {
             const confirmado = window.confirm(`¿Seguro que quieres eliminar al usuario?`);
             if (!confirmado) return;
             try {
-                await eliminarUsuarioPorId(window.location.pathname,Id);
+                await del('/Usuario',Id, token);
                 setMensaje('Usuario eliminado correctamente.');
                 await cargarUsuarios();
             } catch (err) {
@@ -111,7 +111,7 @@ function UsuariosPage() {
     // ✅ Evita recalcular el listado si no cambió
     const filasUsuarios = useMemo(
         () =>
-            usuarios.map((u) => (<UsuarioRow key={u.Id} usuario={u} onEdit={prepararEdicion} onDelete={eliminarUsuario} />
+            usuarios.map((u) => (<UsuarioRow key={u.Id} usuario={u} token={token} onEdit={prepararEdicion} onDelete={eliminarUsuario} />
             )),
         [usuarios, prepararEdicion, eliminarUsuario]
     );
