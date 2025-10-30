@@ -1,7 +1,6 @@
 import React, {useState} from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import axios from "axios";
 
 const LoginPage = () => {
     const [username, setUsername] = useState("");
@@ -13,12 +12,11 @@ const LoginPage = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post("http://localhost:5000/api/login", {
-                username,
-                password,
-            });
-            login(response.data.token);
-            navigate("/");
+            const result = await login(username, password);
+            console.log(result);
+            if(result && result.estado == 200){
+                navigate("/"); // Redirigir a la página de inicio después del registro
+            }
         } catch (err) {
             setError("Invalid username or password");
         }

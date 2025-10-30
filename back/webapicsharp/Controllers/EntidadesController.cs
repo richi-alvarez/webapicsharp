@@ -514,7 +514,7 @@ namespace webapicsharp.Controllers
             string tabla,                                           // Del path: /api/{tabla}
             [FromBody] Dictionary<string, object?> datosEntidad,   // Del body: JSON con datos
             [FromQuery] string? esquema = null,                    // Query param: ?esquema=valor
-            [FromQuery] string? camposEncriptar = null             // Query param: ?camposEncriptar=password,pin
+            [FromQuery] string? camposEncriptar = null             // Query param: ?camposEncriptar=contrasena,oassword,pin
         )
         {
             try

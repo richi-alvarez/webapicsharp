@@ -7,6 +7,8 @@ import UsuariosPage from './pages/UsuariosPage';
 import TipoProyectoPage from './pages/TipoProyectoPage';
 import EstadoPage from './pages/EstadoPage';
 import EntregablesPage from './pages/EntregablesPage';
+import { RegisterPage } from './pages/RegisterPage';
+import { LogoutPage } from './pages/LogoutPage.jsx';
 // puedes agregar más páginas, por ejemplo TipoProyectosPage, etc.
 
 function App() {
@@ -21,10 +23,15 @@ function App() {
           <Link to="/estados">Estados</Link>
           {' | '}
           <Link to="/entregables">Entregables</Link>
-          
+          {' | '}
+          <Link to="/register">Register</Link>
+          {' | '}
+          <Link to="/logout">Log-out</Link>
         </nav>
         <Routes>
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/logout" element={<LogoutPage />} />
           <Route element={<ProtectedRoute />} >
             <Route path="/usuarios" element={<UsuariosPage />} />
             <Route path="/tipoproyectos" element={<TipoProyectoPage />} />

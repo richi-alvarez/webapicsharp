@@ -1,8 +1,12 @@
 const BASE_URL = "http://localhost:5031/api";
 
-export async function fetchUsuarios(path) {
+export async function fetchUsuarios(path ,token) {
     console.log("path", path)
-  const resp = await fetch(BASE_URL+path);
+  const resp = await fetch(BASE_URL+path, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  });
   if (!resp.ok) throw new Error("Error al obtener usuarios");
   const data = await resp.json();
   return data.datos;  // suponiendo que la respuesta tiene { datos: [...] }

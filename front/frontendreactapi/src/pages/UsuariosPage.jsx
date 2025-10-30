@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useMemo, memo } from 'react';
 import { fetchUsuarios, crearUsuario, actualizarUsuarioPorId, eliminarUsuarioPorId } from '../api/usuarios';
-
+import { useAuth } from '../context/AuthContext';
 // ✅ Fila memorizada: solo se re-renderiza si cambia el usuario
 const UsuarioRow = memo(({ usuario, onEdit, onDelete }) => (
 
@@ -17,6 +17,7 @@ const UsuarioRow = memo(({ usuario, onEdit, onDelete }) => (
 ));
 
 function UsuariosPage() {
+    const { token } = useAuth();
     const [usuarios, setUsuarios] = useState([]);
     const [usuarioActual, setUsuarioActual] = useState({
         Id: 0,
@@ -33,7 +34,7 @@ function UsuariosPage() {
     const cargarUsuarios = useCallback(async () => {
         setCargando(true);
         try {
-            const data = await fetchUsuarios(window.location.pathname);
+            const data = await fetchUsuarios('/Usuario', token);
             setUsuarios(Array.isArray(data) ? data : []);
         } catch (err) {
             setMensaje(`Error: ${err.message}`);
