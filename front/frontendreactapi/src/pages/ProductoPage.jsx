@@ -305,9 +305,7 @@ function ProductoPage() {
             <table className="table table-striped">
                 <thead>
                     <tr>
-                        <th>Proyecto Padre</th>
-                        <th>Responsable</th>
-                        <th>Tipo Proyecto</th>
+                        <th>Producto</th>
                         <th>Código</th>
                         <th>Título</th>
                         <th>Descripción</th>   

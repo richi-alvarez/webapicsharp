@@ -16,6 +16,7 @@ import EstadoProyecto from './pages/EstadoProyecto.jsx';
 import TipoProducto from './pages/TipoProducto.jsx';
 import ProductoPage from './pages/ProductoPage.jsx';
 import ProyectoProducto from './pages/ProyectoProducto.jsx';
+import Wellcome from './pages/Wellcome.jsx';
 // puedes agregar más páginas, por ejemplo TipoProyectosPage, etc.
 
 function App() {
@@ -54,6 +55,7 @@ function App() {
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/logout" element={<LogoutPage />} />
           <Route element={<ProtectedRoute />} >
+            <Route path="/wellcome" element={<Wellcome />} />
             <Route path="/usuarios" element={<UsuariosPage />} />
             <Route path="/tiporesponsable" element={<TipoResponsable />} />
             <Route path="/responsable" element={<Responsable />} />

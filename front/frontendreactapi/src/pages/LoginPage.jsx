@@ -14,7 +14,7 @@ const LoginPage = () => {
         try {
             const result = await login(username, password);
             if(result && result.estado == 200){
-                navigate("/"); // Redirigir a la página de inicio después del registro
+                navigate("/wellcome"); // Redirigir a la página de inicio después del registro
             }
         } catch (err) {
             setError("Invalid username or password");
