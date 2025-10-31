@@ -122,7 +122,7 @@ function ProyectoPage() {
                     }*/
                     let proyectoPadre = null;
                     if(proyecto.IdProyectoPadre){
-                        proyectoPadre = await get(`/Proyecto/Id/${proyecto.IdTipoProyecto}`, token);
+                        proyectoPadre = await get(`/Proyecto/Id/${proyecto.Id}`, token);
                     }
                     return {
                         ...proyecto,

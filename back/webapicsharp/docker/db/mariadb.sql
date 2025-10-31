@@ -278,6 +278,17 @@ INSERT INTO Proyecto_Producto (IdProyecto, IdProducto, FechaAsociacion) VALUES
   (2, 2, '2025-11-20'),
   (3, 3, '2025-12-05');
 
+-- 
+
+
+
+
+
+
+
+
+
+
 
 CREATE TABLE Entregable (
     Id INT NOT NULL AUTO_INCREMENT,
