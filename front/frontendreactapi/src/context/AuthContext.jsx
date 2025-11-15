@@ -93,10 +93,14 @@ const register = async (email, password, avatar, activo) => {
                     (data) => {
                         console.log("Registered user data:", data);
                         resolve(data);
+                    },
+                    (error) => {
+                        console.error("Error en registro:", error);
+                        reject(error);
                     }
                 );
             } catch (error) {
-                console.error("Error en registro:", error);
+                console.error("Error respuesta registro:", error);
                 reject(error);
             }
         }, 1000);

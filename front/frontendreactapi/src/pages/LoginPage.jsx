@@ -32,6 +32,12 @@ const LoginPage = () => {
     return (
         <div className="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
              data-sidebar-position="fixed" data-header-position="fixed">
+            {error &&<div style={{width:"500px", marginTop:"10px"}}
+                    > <div class="alert alert-warning" role="alert">
+                    {error}
+                    </div>
+                </div>
+            }
                 <div className="position-relative overflow-hidden text-bg-light min-vh-100 d-flex align-items-center justify-content-center">
 
                     <div className="d-flex align-items-center justify-content-center w-100">
@@ -43,7 +49,6 @@ const LoginPage = () => {
                                         <img src="./assets/images/logos/logo.svg" alt="" />
                                         </a>
                                         <p class="text-center">Your Social Campaigns</p>
-                                        {error && <div style={{ color: "red", marginBottom: "10px" }}>{error}</div>}
                                         <form  onSubmit={handleSubmit}>
                                             <div class="mb-3">
                                                 <label htmlFor="exampleInputEmail1" className="form-label">Username</label>

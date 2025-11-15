@@ -1,5 +1,13 @@
 import { useState, useCallback } from "react";
 
+// Debug: Verificar que la variable de entorno se está cargando
+console.log("🔧 Variable de entorno REACT_APP_API_URL:", process.env.REACT_APP_API_URL);
+
+const apiUrl = process.env.REACT_APP_API_URL;
+const BASE_URL = apiUrl;
+
+console.log("🌐 BASE_URL configurada:", BASE_URL);
+
 const useFetch = (url, method = 'GET') => {
     const [isLoading, setLoadingState] = useState(false);
     const makeFetchRequestCb = useCallback(makeFetchRequest, [url, method]);
@@ -7,7 +15,6 @@ const useFetch = (url, method = 'GET') => {
     async function makeFetchRequest(body, authToken, successCb, errorCb = () => {}) {
         setLoadingState(true);
         const CONNECTION_ERROR_MSG = "Connection error";
-        const BASE_URL = 'http://localhost:5031/api/';
         
         const headers = {
           "Content-type": "application/json"
@@ -21,7 +28,7 @@ const useFetch = (url, method = 'GET') => {
             console.log("Esperando 2 segundos...");
             await new Promise(resolve => setTimeout(resolve, 2000));
             
-            const response = await fetch(`${BASE_URL+url}`, {
+            const response = await fetch(`${BASE_URL+"/"+url}`, {
              method: method,
                 headers: {
                     "Content-Type": "application/json",

@@ -1,4 +1,6 @@
-const BASE_URL = "http://localhost:5031/api";
+const apiUrl = process.env.REACT_APP_API_URL;
+
+const BASE_URL = apiUrl;
 
 // ✅ Función helper para manejar errores de respuesta
 async function handleResponseError(resp) {
