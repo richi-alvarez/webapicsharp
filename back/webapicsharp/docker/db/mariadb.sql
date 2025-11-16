@@ -281,15 +281,6 @@ INSERT INTO Proyecto_Producto (IdProyecto, IdProducto, FechaAsociacion) VALUES
 -- 
 
 
-
-
-
-
-
-
-
-
-
 CREATE TABLE Entregable (
     Id INT NOT NULL AUTO_INCREMENT,
     Codigo VARCHAR(50) NULL,
@@ -335,6 +326,13 @@ INSERT INTO Producto_Entregable (IdProducto, IdEntregable, FechaAsociacion) VALU
   (1, 1, '2025-11-02'), -- Licencia CRM -> Análisis de Requisitos
   (2, 2, '2025-11-17'), -- Servidor Rack -> Diseño de BD
   (3, 3, '2025-12-02'); -- Soporte Premium -> Prototipo Funcional
+
+
+
+
+
+
+
 
 
 CREATE TABLE Responsable_Entregable (
@@ -600,4 +598,6 @@ INSERT INTO Meta_Proyecto (IdMeta, IdProyecto, FechaAsociacion) VALUES
   (1, 1, '2025-11-01'), -- Aumentar ventas Q4 en 15% -> Sitio corporativo
   (2, 2, '2025-11-15'), -- NPS superior a 80 puntos -> App móvil clientes
   (3, 3, '2025-12-01'); -- Automatizar 5 procesos clave -> Automatización logística
+
+
 

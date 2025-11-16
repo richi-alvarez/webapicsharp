@@ -115,6 +115,64 @@ builder.Services.AddSwaggerGen(opciones =>
 });
 
 
+
+// -----------------------------------------------------------------
+// REGISTRO DE SERVICIOS (Dependency Injection - DIP)
+// -----------------------------------------------------------------
+// Esta sección registra todas las abstracciones (interfaces) con sus implementaciones concretas.
+// El contenedor de inyección de dependencias de ASP.NET Core resolverá automáticamente
+// las dependencias cuando sean necesarias.
+//
+// TIPOS DE REGISTRO:
+// - AddSingleton: Una instancia para toda la aplicación (compartida entre requests)
+// - AddScoped: Una instancia por request HTTP (se crea y destruye con cada petición)
+// - AddTransient: Una instancia nueva cada vez que se solicita
+// -----------------------------------------------------------------
+
+// -----------------------------------------------------------------
+// REGISTRO DE POLÍTICA DE TABLAS PROHIBIDAS (MEJORA ARQUITECTÓNICA)
+// -----------------------------------------------------------------
+// NUEVO: Registro de la política que determina qué tablas están permitidas/prohibidas.
+//
+// MEJORA ARQUITECTÓNICA - POR QUÉ ESTO ES IMPORTANTE PARA TUS ESTUDIANTES:
+// Antes: ServicioCrud dependía directamente de IConfiguration (violaba DIP)
+// Ahora: ServicioCrud depende de IPoliticaTablasProhibidas (cumple DIP perfectamente)
+//
+// BENEFICIOS DE ESTA MEJORA:
+// 1. SEPARACIÓN DE RESPONSABILIDADES (SRP):
+//    - ServicioCrud solo se encarga de lógica de negocio CRUD
+//    - PoliticaTablasProhibidasDesdeJson se encarga de leer configuración
+//    - Cada clase tiene una responsabilidad única y bien definida
+//
+// 2. INVERSIÓN DE DEPENDENCIAS (DIP):
+//    - ServicioCrud (módulo de alto nivel) NO depende de IConfiguration (detalle de implementación)
+//    - Ambos dependen de IPoliticaTablasProhibidas (abstracción del dominio)
+//    - Cumple perfectamente el principio: "depende de abstracciones, no de implementaciones"
+//
+// 3. ABIERTO/CERRADO (OCP):
+//    - Podemos cambiar cómo se leen las tablas prohibidas sin modificar ServicioCrud
+//    - Podemos crear PoliticaTablasProhibidasDesdeBaseDatos mañana
+//    - ServicioCrud está cerrado para modificación, abierto para extensión
+//
+// 4. TESTABILIDAD:
+//    - Fácil crear mocks de IPoliticaTablasProhibidas para testing
+//    - No necesitas configurar IConfiguration completo en tests
+//    - Tests más simples y más rápidos
+//
+// POR QUÉ AddSingleton:
+// - La configuración de tablas prohibidas no cambia durante la ejecución de la aplicación
+// - Queremos una sola instancia compartida por todos los requests (mejor performance)
+// - No tiene estado mutable, es thread-safe (solo lee configuración una vez en el constructor)
+// - Reduce overhead de crear instancias en cada request
+//
+// ARQUITECTURA DE DEPENDENCIAS:
+// ServicioCrud → IPoliticaTablasProhibidas → PoliticaTablasProhibidasDesdeJson → IConfiguration
+// (Lógica de      (Abstracción              (Implementación                      (Infraestructura
+//  negocio)        del dominio)               concreta)                            de config)
+builder.Services.AddSingleton<
+    webapicsharp.Servicios.Abstracciones.IPoliticaTablasProhibidas,
+    webapicsharp.Servicios.Politicas.PoliticaTablasProhibidasDesdeJson>();
+    
 // -----------------------------------------------------------------
 // NOTA DIP: el registro de interfaces → implementaciones irá aquí.
 // Ejemplos (se dejan comentados hasta el siguiente paso):

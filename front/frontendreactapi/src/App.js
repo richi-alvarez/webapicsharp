@@ -17,6 +17,7 @@ import EstadoProyecto from './pages/EstadoProyecto.jsx';
 import TipoProducto from './pages/TipoProducto.jsx';
 import ProductoPage from './pages/ProductoPage.jsx';
 import ProyectoProducto from './pages/ProyectoProducto.jsx';
+import ProductoEntregable from './pages/ProductoEntregable.jsx';
 import Wellcome from './pages/Wellcome.jsx';
 
 function App() {
@@ -41,6 +42,7 @@ function App() {
               <Route path="/tipoproducto" element={<TipoProducto />} />
               <Route path="/productos" element={<ProductoPage />} />
               <Route path="/proyectoproducto" element={<ProyectoProducto />} />
+              <Route path="/productoentregable" element={<ProductoEntregable />} />
             </Route>
           </Route>
           <Route path="*" element={<LoginPage />} />

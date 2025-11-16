@@ -3404,11 +3404,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/home/epayco21/Escritorio/webapicsharp/back/webapicsharp/webapicsharp.csproj",
+      "projectUniqueName": "/home/epayco21/Escritorio/itm/webapicsharp/back/webapicsharp/webapicsharp.csproj",
       "projectName": "webapicsharp",
-      "projectPath": "/home/epayco21/Escritorio/webapicsharp/back/webapicsharp/webapicsharp.csproj",
+      "projectPath": "/home/epayco21/Escritorio/itm/webapicsharp/back/webapicsharp/webapicsharp.csproj",
       "packagesPath": "/home/epayco21/.nuget/packages/",
-      "outputPath": "/home/epayco21/Escritorio/webapicsharp/back/webapicsharp/obj/",
+      "outputPath": "/home/epayco21/Escritorio/itm/webapicsharp/back/webapicsharp/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/home/epayco21/.nuget/NuGet/NuGet.Config"

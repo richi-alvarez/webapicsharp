@@ -29,6 +29,8 @@ export const Layout = () => {
         {' | '}
         <Link to="/proyectoproducto">Proyecto Producto</Link>
         {' | '}
+        <Link to="/productoentregable">Producto Entregable</Link>
+        {' | '}
         <Link to="/logout">Cerrar Sesión</Link>
       </nav>
       <main style={{ padding: '1rem' }}>
