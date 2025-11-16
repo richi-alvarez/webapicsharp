@@ -11,7 +11,7 @@ const ResponsableRow = memo(({Responsable, onEdit, onDelete}) => (
             <button className="btn btn-warning" onClick={() => onEdit(Responsable)}>
                 Editar
             </button>
-            <button className="btn btn-danger" onClick={() => onDelete(Responsable.IdProyecto)}>
+            <button hidden className="btn btn-danger" onClick={() => onDelete(Responsable.IdProyecto)} style={{display:"none"}}  >
                 Eliminar
             </button>
         </td>
