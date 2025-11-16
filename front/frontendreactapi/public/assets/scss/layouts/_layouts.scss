@@ -50,7 +50,7 @@ body {
   &[data-sidebar-position="fixed"] {
     .left-sidebar {
       position: fixed;
-      top: 65px;
+      top: 23px;
 
       @include media-breakpoint-down(lg){
         top: 131px;

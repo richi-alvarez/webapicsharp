@@ -14,10 +14,10 @@
   width: 100%;
   background: var(--bs-body-bg);
   padding: 0 10px;
-  top: 65px;
+  top: 0px;
 
   @include media-breakpoint-down(lg){
-    top: 131px;
+    top: 0px;
   }
 
   .container-fluid {
