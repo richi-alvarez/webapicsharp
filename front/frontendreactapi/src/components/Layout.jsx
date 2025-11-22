@@ -2,12 +2,15 @@ import React, { useState } from 'react';
 import { Link, Outlet } from 'react-router-dom';
 
 export const Layout = () => {
-  const [isUsuarioOpen, setIsUsuarioOpen] = useState(false);
+  const [openMenus, setOpenMenus] = useState({});
   const [activeMenuItem, setActiveMenuItem] = useState('inicio');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-  const toggleUsuarioMenu = () => {
-    setIsUsuarioOpen(!isUsuarioOpen);
+  const toggleMenu = (menuName) => {
+    setOpenMenus(prev => ({
+      ...prev,
+      [menuName]: !prev[menuName]
+    }));
   };
 
   const showSidebar = () => {
@@ -56,7 +59,7 @@ export const Layout = () => {
                 >
                   <div className="d-flex align-items-center gap-3">
                     <span className="d-flex">
-                      <i className="ti ti-aperture"></i>
+                      <i className="ti ti-atom"></i>
                     </span>
                     <span className="hide-menu">Inicio</span>
                   </div>
@@ -65,11 +68,11 @@ export const Layout = () => {
               <li className={`sidebar-item`}>
                 <a 
                   href="#" 
-                  aria-expanded={isUsuarioOpen} 
+                  aria-expanded={openMenus.usuario || false} 
                   className={`sidebar-link justify-content-between has-arrow ${activeMenuItem === 'usuario' ? 'active' : ''}`}
                   onClick={(e) => {
                     e.preventDefault();
-                    toggleUsuarioMenu();
+                    toggleMenu('usuario');
                     handleMenuItemClick('usuario');
                   }}
                 >
@@ -77,10 +80,10 @@ export const Layout = () => {
                     <span className="d-flex">
                       <i className="ti ti-user-circle"></i>
                     </span>
-                    <span className="hide-menu">Usuario</span>
+                    <span className="hide-menu">Usuarios</span>
                   </div>
                 </a>
-                <ul aria-expanded={isUsuarioOpen} className={`collapse first-level ${isUsuarioOpen ? 'in' : ''}`}>
+                <ul aria-expanded={openMenus.usuario || false} className={`collapse first-level ${openMenus.usuario ? 'in' : ''}`}>
                   <li className="sidebar-item">
                     <Link to="/usuarios" className="sidebar-link justify-content-between">
                       <div class="d-flex align-items-center gap-3">
@@ -93,6 +96,187 @@ export const Layout = () => {
                   </li>
                 </ul>
               </li>
+              <li className={`sidebar-item`}>
+                <a 
+                  href="#" 
+                  aria-expanded={openMenus.proyectos || false} 
+                  className={`sidebar-link justify-content-between has-arrow ${activeMenuItem === 'proyectos' ? 'active' : ''}`}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    toggleMenu('proyectos');
+                    handleMenuItemClick('proyectos');
+                  }}
+                >
+                  <div className="d-flex align-items-center gap-3">
+                    <span className="d-flex">
+                      <i className="ti ti-files"></i>
+                    </span>
+                    <span className="hide-menu">Proyectos</span>
+                  </div>
+                </a>
+                <ul aria-expanded={openMenus.proyectos || false} className={`collapse first-level ${openMenus.proyectos ? 'in' : ''}`}>
+                  <li className="sidebar-item">
+                    <Link to="/proyectos" className="sidebar-link justify-content-between">
+                      <div class="d-flex align-items-center gap-3">
+                        <div class="round-16 d-flex align-items-center justify-content-center">
+                          <i class="ti ti-circle"></i>
+                        </div>
+                        <span class="hide-menu">Proyectos</span>
+                      </div>
+                    </Link>
+                  </li>
+                  <li className="sidebar-item">
+                    <Link to="/tipoproyectos" className="sidebar-link justify-content-between">
+                      <div class="d-flex align-items-center gap-3">
+                        <div class="round-16 d-flex align-items-center justify-content-center">
+                          <i class="ti ti-circle"></i>
+                        </div>
+                        <span class="hide-menu">Tipos de Proyecto</span>
+                      </div>
+                    </Link>
+                  </li>
+                  <li className="sidebar-item">
+                    <Link to="/estadoproyecto" className="sidebar-link justify-content-between">
+                      <div class="d-flex align-items-center gap-3">
+                        <div class="round-16 d-flex align-items-center justify-content-center">
+                          <i class="ti ti-circle"></i>
+                        </div>
+                        <span class="hide-menu">Estado Proyecto</span>
+                      </div>
+                    </Link>
+                  </li>
+                  <li className="sidebar-item">
+                    <Link to="/proyectoproducto" className="sidebar-link justify-content-between">
+                      <div class="d-flex align-items-center gap-3">
+                        <div class="round-16 d-flex align-items-center justify-content-center">
+                          <i class="ti ti-circle"></i>
+                        </div>
+                        <span class="hide-menu">Producto Proyecto</span>
+                      </div>
+                    </Link>
+                  </li>
+                </ul>
+              </li> 
+              <li className={`sidebar-item`}>
+                <Link 
+                  to="/estados" 
+                  className={`sidebar-link justify-content-between  ${activeMenuItem === 'estados' ? 'active' : ''}`}
+                  onClick={() => handleMenuItemClick('estados')}
+                >
+                  <div className="d-flex align-items-center gap-3">
+                    <span className="d-flex">
+                      <i className="ti ti-chart-line"></i>
+                    </span>
+                    <span className="hide-menu">Estados</span>
+                  </div>
+                </Link>
+              </li>  
+              <li className={`sidebar-item`}>
+                <Link 
+                  to="/entregables" 
+                  className={`sidebar-link justify-content-between  ${activeMenuItem === 'entregables' ? 'active' : ''}`}
+                  onClick={() => handleMenuItemClick('entregables')}
+                >
+                  <div className="d-flex align-items-center gap-3">
+                    <span className="d-flex">
+                      <i className="ti ti-aperture"></i>
+                    </span>
+                    <span className="hide-menu">Entregables</span>
+                  </div>
+                </Link>
+              </li>
+              <li className={`sidebar-item`}>
+                <a 
+                  href="#" 
+                  aria-expanded={openMenus.responsable || false} 
+                  className={`sidebar-link justify-content-between has-arrow ${activeMenuItem === 'responsable' ? 'active' : ''}`}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    toggleMenu('responsable');
+                    handleMenuItemClick('responsable');
+                  }}
+                >
+                  <div className="d-flex align-items-center gap-3">
+                    <span className="d-flex">
+                      <i className="ti ti-user-circle"></i>
+                    </span>
+                    <span className="hide-menu">Responsables</span>
+                  </div>
+                </a>
+                <ul aria-expanded={openMenus.responsable || false} className={`collapse first-level ${openMenus.responsable ? 'in' : ''}`}>
+                  <li className="sidebar-item">
+                    <Link to="/responsable" className="sidebar-link justify-content-between">
+                      <div class="d-flex align-items-center gap-3">
+                        <div class="round-16 d-flex align-items-center justify-content-center">
+                          <i class="ti ti-circle"></i>
+                        </div>
+                        <span class="hide-menu">Responsables</span>
+                      </div>
+                    </Link>
+                  </li>
+                  <li className="sidebar-item">
+                    <Link to="/tiporesponsable" className="sidebar-link justify-content-between">
+                      <div class="d-flex align-items-center gap-3">
+                        <div class="round-16 d-flex align-items-center justify-content-center">
+                          <i class="ti ti-circle"></i>
+                        </div>
+                        <span class="hide-menu">Tipo de responsable</span>
+                      </div>
+                    </Link>
+                  </li>
+                </ul>
+              </li> 
+              <li className={`sidebar-item`}>
+                <a 
+                  href="#" 
+                  aria-expanded={openMenus.productos || false} 
+                  className={`sidebar-link justify-content-between has-arrow ${activeMenuItem === 'productos' ? 'active' : ''}`}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    toggleMenu('productos');
+                    handleMenuItemClick('productos');
+                  }}
+                >
+                  <div className="d-flex align-items-center gap-3">
+                    <span className="d-flex">
+                      <i className="ti ti-components"></i>
+                    </span>
+                    <span className="hide-menu">Productos</span>
+                  </div>
+                </a>
+                <ul aria-expanded={openMenus.productos || false} className={`collapse first-level ${openMenus.productos ? 'in' : ''}`}>
+                  <li className="sidebar-item">
+                    <Link to="/productos" className="sidebar-link justify-content-between">
+                      <div class="d-flex align-items-center gap-3">
+                        <div class="round-16 d-flex align-items-center justify-content-center">
+                          <i class="ti ti-circle"></i>
+                        </div>
+                        <span class="hide-menu">Productos</span>
+                      </div>
+                    </Link>
+                  </li>
+                  <li className="sidebar-item">
+                    <Link to="/tipoproducto" className="sidebar-link justify-content-between">
+                      <div class="d-flex align-items-center gap-3">
+                        <div class="round-16 d-flex align-items-center justify-content-center">
+                          <i class="ti ti-circle"></i>
+                        </div>
+                        <span class="hide-menu">Tipo de producto</span>
+                      </div>
+                    </Link>
+                  </li>
+                  <li className="sidebar-item">
+                    <Link to="/productoentregable" className="sidebar-link justify-content-between">
+                      <div class="d-flex align-items-center gap-3">
+                        <div class="round-16 d-flex align-items-center justify-content-center">
+                          <i class="ti ti-circle"></i>
+                        </div>
+                        <span class="hide-menu">Producto entregable</span>
+                      </div>
+                    </Link>
+                  </li>
+                </ul>
+              </li>  
               {/* Add more sidebar items as needed */}
             </ul>
           </nav>
@@ -159,7 +343,7 @@ export const Layout = () => {
                       <i className="ti ti-list-check fs-6"></i>
                       <p className="mb-0 fs-3">My Task</p>
                     </a>
-                    <a href="./authentication-login.html" class="btn btn-outline-primary mx-3 mt-2 d-block">Logout</a>
+                     <Link className="btn btn-outline-primary mx-3 mt-2 d-block" to="/logout">Cerrar Sesión</Link>
                   </div>
                 </div>
               </li>
@@ -171,32 +355,8 @@ export const Layout = () => {
 
         <div className="body-wrapper-inner">
           <div class="container-fluid">
-            <nav style={{ padding: '1rem', backgroundColor: '#f0f0f0', marginBottom: '1rem', display: 'none' }}>
-              <Link to="/tipoproyectos">Tipos de Proyecto</Link>
-              {' | '}
-              <Link to="/estados">Estados</Link>
-              {' | '}
-              <Link to="/entregables">Entregables</Link>
-              {' | '}
-              <Link to="/tiporesponsable">Tipos de Responsable</Link>
-              {' | '}
-              <Link to="/responsable">Responsables</Link>
-              {' | '}
-              <Link to="/proyectos">Proyectos</Link>
-              {' | '}
-              <Link to="/estadoproyecto">Estado Proyecto</Link>
-              {' | '}
-              <Link to="/tipoproducto">Tipo Producto</Link>
-              {' | '}
-              <Link to="/productos">Productos</Link>
-              {' | '}
-              <Link to="/proyectoproducto">Proyecto Producto</Link>
-              {' | '}
-              <Link to="/productoentregable">Producto Entregable</Link>
-              {' | '}
-              <Link to="/logout">Cerrar Sesión</Link>
-            </nav>
-            <main style={{ padding: '1rem' }}>
+          
+            <main className='row' style={{overflow:"auto"}}>
               <Outlet />
             </main>
           </div>

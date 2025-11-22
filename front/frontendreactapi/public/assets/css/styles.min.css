@@ -15818,11 +15818,11 @@ textarea.form-control-lg {
   width: 100%;
   background: var(--bs-body-bg);
   padding: 0 10px;
-  top: 65px;
+  top: 0px;
 }
 @media (max-width: 991.98px) {
   .app-header {
-    top: 131px;
+    top: 0px;
   }
 }
 .app-header .container-fluid, .app-header .container-sm, .app-header .container-md, .app-header .container-lg, .app-header .container-xl, .app-header .container-xxl {
@@ -15912,11 +15912,11 @@ body {
   margin: 0 auto;
   padding: 24px;
   transition: 0.2s ease-in;
-  padding-top: 180px;
+  padding-top: 80px;
 }
 @media (max-width: 991.98px) {
   .body-wrapper .container-fluid, .body-wrapper .container-sm, .body-wrapper .container-md, .body-wrapper .container-lg, .body-wrapper .container-xl, .body-wrapper .container-xxl {
-    padding-top: 230px;
+    padding-top: 80px;
   }
 }
 
@@ -15931,7 +15931,7 @@ body {
 
 #main-wrapper[data-layout=vertical][data-sidebar-position=fixed] .left-sidebar {
   position: fixed;
-  top: 65px;
+  top: 0px;
 }
 @media (max-width: 991.98px) {
   #main-wrapper[data-layout=vertical][data-sidebar-position=fixed] .left-sidebar {
