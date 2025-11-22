@@ -15,7 +15,9 @@ const useFetch = (url, method = 'GET') => {
     async function makeFetchRequest(body, authToken, successCb, errorCb = () => {}) {
         setLoadingState(true);
         const CONNECTION_ERROR_MSG = "Connection error";
-        
+
+        var requestUrl = `${BASE_URL+"/"+url}`;
+
         const headers = {
           "Content-type": "application/json"
         } 
@@ -23,18 +25,29 @@ const useFetch = (url, method = 'GET') => {
         if(authToken){
             headers["Authorization"] = authToken;
         }
+       
         try{
-            // ✅ ESPERAR 5 SEGUNDOS ANTES DE HACER LA PETICIÓN
+            // ✅ ESPERAR 2 SEGUNDOS ANTES DE HACER LA PETICIÓN
             console.log("Esperando 2 segundos...");
             await new Promise(resolve => setTimeout(resolve, 2000));
             
-            const response = await fetch(`${BASE_URL+"/"+url}`, {
-             method: method,
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(body),
-            });
+            if(method === 'GET'){
+                // Para GET, el body se usa como parte de la URL (path parameters)
+                if(body && body !== null){
+                    requestUrl += `${body}`;
+                }
+                var response = await fetch(requestUrl, {
+                    method: method,
+                    headers: headers
+                });
+            }else{
+                var response = await fetch(requestUrl, {
+                    method: method,
+                    headers: headers,
+                    body: JSON.stringify(body),
+                });
+            }
+            
             if (!response.ok) {
                 const data = await response.json();
                 //errorCb(data.mensaje || "Request failed", data.estado || response.status);

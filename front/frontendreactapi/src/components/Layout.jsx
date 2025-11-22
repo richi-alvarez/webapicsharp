@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Link, Outlet } from 'react-router-dom';
 
-export const Layout = () => {
+export const Layout = ({ rol }) => {
+  console.log("Rol en Layout:", rol);
   const [openMenus, setOpenMenus] = useState({});
   const [activeMenuItem, setActiveMenuItem] = useState('inicio');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -20,6 +21,7 @@ export const Layout = () => {
   const handleMenuItemClick = (menuItem) => {
     setActiveMenuItem(menuItem);
   };
+  const content = rol == 'admin' ? <Outlet /> : <div>No tienes permiso para ver este contenido.</div>;
 
   return (
     <div
@@ -224,6 +226,16 @@ export const Layout = () => {
                       </div>
                     </Link>
                   </li>
+                  <li className="sidebar-item">
+                    <Link to="/responsableentregable" className="sidebar-link justify-content-between">
+                      <div class="d-flex align-items-center gap-3">
+                        <div class="round-16 d-flex align-items-center justify-content-center">
+                          <i class="ti ti-circle"></i>
+                        </div>
+                        <span class="hide-menu">Responsabe entregable</span>
+                      </div>
+                    </Link>
+                  </li>
                 </ul>
               </li> 
               <li className={`sidebar-item`}>
@@ -357,7 +369,7 @@ export const Layout = () => {
           <div class="container-fluid">
           
             <main className='row' style={{overflow:"auto"}}>
-              <Outlet />
+              {content}
             </main>
           </div>
         </div>

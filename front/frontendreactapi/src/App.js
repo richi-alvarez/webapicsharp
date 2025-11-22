@@ -18,6 +18,7 @@ import TipoProducto from './pages/TipoProducto.jsx';
 import ProductoPage from './pages/ProductoPage.jsx';
 import ProyectoProducto from './pages/ProyectoProducto.jsx';
 import ProductoEntregable from './pages/ProductoEntregable.jsx';
+import ResponsableEntregable from './pages/ResponsableEntregable.jsx';
 import Wellcome from './pages/Wellcome.jsx';
 
 function App() {
@@ -29,7 +30,7 @@ function App() {
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/logout" element={<LogoutPage />} />
           <Route element={<ProtectedRoute />} >
-            <Route element={<Layout />}>
+            <Route element={<Layout rol={'admin'} />}>
               <Route path="/wellcome" element={<Wellcome />} />
               <Route path="/usuarios" element={<UsuariosPage />} />
               <Route path="/tiporesponsable" element={<TipoResponsable />} />
@@ -43,6 +44,7 @@ function App() {
               <Route path="/productos" element={<ProductoPage />} />
               <Route path="/proyectoproducto" element={<ProyectoProducto />} />
               <Route path="/productoentregable" element={<ProductoEntregable />} />
+              <Route path="/responsableentregable" element={<ResponsableEntregable />} />
             </Route>
           </Route>
           <Route path="*" element={<LoginPage />} />

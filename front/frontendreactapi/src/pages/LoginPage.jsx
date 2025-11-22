@@ -50,7 +50,7 @@ const LoginPage = () => {
                                         </a>
                                         <p class="text-center">Your Social Campaigns</p>
                                         <form  onSubmit={handleSubmit}>
-                                            <div class="mb-3">
+                                            <div className="mb-3">
                                                 <label htmlFor="exampleInputEmail1" className="form-label">Username</label>
                                                 <input 
                                                 placeholder="Username"
@@ -69,9 +69,9 @@ const LoginPage = () => {
                                                 placeholder="Password"
                                                 value={password}
                                                 onChange={(e) => setPassword(e.target.value)}
-                                                class="form-control" id="exampleInputPassword1" />
+                                                className="form-control" id="exampleInputPassword1" />
                                             </div>
-                                            <button type="submit" class="btn btn-primary w-100 py-8 fs-4 mb-4 rounded-2">
+                                            <button type="submit" className="btn btn-primary w-100 py-8 fs-4 mb-4 rounded-2">
                                                 Login
                                             </button>
 
