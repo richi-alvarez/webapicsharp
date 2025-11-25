@@ -96,7 +96,7 @@ CREATE TABLE Rol (
     PRIMARY KEY (Id) 
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-INSERT INTO Rol (nombre) VALUES ('Administrador'),('Vendedor'),('Cajero'),('Contador'),('Cliente');
+INSERT INTO Rol (nombre) VALUES ('Administrador'),('User');
 
 CREATE TABLE Usuario_rol (
     IdUsuario INT NOT NULL,

@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { Link, Outlet } from 'react-router-dom';
 
-export const Layout = ({ rol }) => {
-  console.log("Rol en Layout:", rol);
+export const Layout = () => {
   const [openMenus, setOpenMenus] = useState({});
   const [activeMenuItem, setActiveMenuItem] = useState('inicio');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -21,7 +20,7 @@ export const Layout = ({ rol }) => {
   const handleMenuItemClick = (menuItem) => {
     setActiveMenuItem(menuItem);
   };
-  const content = rol == 'admin' ? <Outlet /> : <div>No tienes permiso para ver este contenido.</div>;
+  const content =  <Outlet />;
 
   return (
     <div

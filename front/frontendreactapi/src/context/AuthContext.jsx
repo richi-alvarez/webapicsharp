@@ -5,6 +5,7 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({children}) => {
     const [token, setToken] = useState(() => localStorage.getItem("authToken") || null);
+    const [rol, setRol] = useState(() => localStorage.getItem("rol") || null);
     const [idUsuario, setIdUsuario] = useState(null);
     const [emailUsuario, setEmailUsuario] = useState(null);
     const [isLoading, setLoading] = useState(false);
@@ -19,7 +20,12 @@ export const AuthProvider = ({children}) => {
         if (storedToken) {
             setToken(storedToken);
         }
+        const storedRol = localStorage.getItem("rol");
+        if (storedRol) {
+            setRol(storedRol);
+        }
     }, []);
+
 
 
     const activedAvatar = async (email,contrasena) => {
@@ -117,6 +123,7 @@ export const AuthProvider = ({children}) => {
                             if(rolresult.datos && rolresult.datos.length > 0){
                                 console.log("Roles del usuario:", rolresult.datos);
                                 localStorage.setItem("rol", rolresult.datos[0].IdRol);
+                                setRol(rolresult.datos[0].IdRol);
                             }
                         }
                         
@@ -138,6 +145,7 @@ export const AuthProvider = ({children}) => {
         localStorage.removeItem("authToken");
         localStorage.removeItem("rol");
         setToken(null);
+        setRol(null);
     };
 
 
@@ -168,7 +176,7 @@ const register = async (email, password, avatar, activo) => {
 
 
     return (
-        <AuthContext.Provider value={{token, login, logout, loading, register, activedAvatar}}>
+        <AuthContext.Provider value={{token, rol, login, logout, loading, register, activedAvatar}}>
             {children}
         </AuthContext.Provider>
     );
