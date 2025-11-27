@@ -20,7 +20,7 @@ import ProyectoProducto from './pages/ProyectoProducto.jsx';
 import ProductoEntregable from './pages/ProductoEntregable.jsx';
 import ResponsableEntregable from './pages/ResponsableEntregable.jsx';
 import Wellcome from './pages/Wellcome.jsx';
-import PrivateRoute from './components/PrivateRoute.jsx';
+import { PrivateRoute } from './components/PrivateRoute.jsx';
 
 function App() {
   return (

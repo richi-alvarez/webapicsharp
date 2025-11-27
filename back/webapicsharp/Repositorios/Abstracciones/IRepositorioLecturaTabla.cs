@@ -110,8 +110,8 @@ namespace webapicsharp.Repositorios.Abstracciones
         /// <param name="esquema">Esquema de la tabla (opcional)</param>
         /// <param name="datos">Datos a insertar como diccionario columna-valor</param>
         /// <param name="camposEncriptar">Lista de campos que deben ser encriptados, separados por coma (opcional)</param>
-        /// <returns>True si se insertó correctamente</returns>
-        Task<bool> CrearAsync(
+        /// <returns>Tupla con éxito, ID principal, campo ID identificado y registro completo</returns>
+        Task<(bool exito, object? idPrincipal, string? campoId, Dictionary<string, object?>? registro)> CrearAsync(
             string nombreTabla,
             string? esquema,
             Dictionary<string, object?> datos,

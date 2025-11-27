@@ -43,6 +43,8 @@ namespace webapicsharp.Repositorios
         // Este campo se inicializa una vez en el constructor y se usa en todos los métodos
         private readonly IProveedorConexion _proveedorConexion;
 
+        private readonly ILogger<RepositorioLecturaMysql> _logger;
+
         /// <summary>
         /// Constructor que recibe el proveedor de conexión mediante inyección de dependencias.
         /// 
@@ -73,7 +75,10 @@ namespace webapicsharp.Repositorios
         /// en la configuración de inyección de dependencias en Program.cs.
         /// En funcionamiento normal, esta excepción nunca debería lanzarse.
         /// </exception>
-        public RepositorioLecturaMysql(IProveedorConexion proveedorConexion)
+        public RepositorioLecturaMysql(
+            IProveedorConexion proveedorConexion,
+            ILogger<RepositorioLecturaMysql> logger
+            )
         {
             // Validación defensiva: asegurar que la inyección de dependencias funcionó correctamente
             // Esta validación protege contra errores de configuración en Program.cs
@@ -82,6 +87,8 @@ namespace webapicsharp.Repositorios
                 nameof(proveedorConexion),
                 "IProveedorConexion no puede ser null. Verificar registro de servicios en Program.cs."
             );
+
+            _logger = logger;
         }
 
         /// <summary>
@@ -491,8 +498,9 @@ namespace webapicsharp.Repositorios
         /// <summary>
         /// Implementa la inserción de registro para Mysql con soporte para encriptación BCrypt.
         /// Construye y ejecuta: INSERT INTO [esquema].[tabla] (columnas) VALUES (@param1, @param2, ...)
+        /// Retorna un objeto con información del registro insertado incluyendo el ID principal.
         /// </summary>
-        public async Task<bool> CrearAsync(
+        public async Task<(bool exito, object? idPrincipal, string? campoId, Dictionary<string, object?>? registro)> CrearAsync(
             string nombreTabla,
             string? esquema,
             Dictionary<string, object?> datos,
@@ -566,7 +574,76 @@ namespace webapicsharp.Repositorios
 
                 // Ejecutar inserción y verificar que se insertó al menos un registro
                 int filasAfectadas = await comando.ExecuteNonQueryAsync();
-                return filasAfectadas > 0;
+                if (filasAfectadas > 0)
+                {
+                    _logger.LogInformation($"Se insertaron {filasAfectadas} fila(s) en la tabla '{nombreTabla}'.");
+                    
+                    // Lista de posibles campos ID ordenados por prioridad
+                    var posiblesCamposId = new[] { "Id", "IdUsuario", "IdProyectoPadre", "IdProyecto", "IdTipoProducto", "Codigo", "IdProducto", "IdResponsable" };
+                    
+                    // Recuperar el registro insertado y capturar el ID principal
+                    var registroGuardado = (Dictionary<string, object?>?)null;
+                    object? idPrincipalGuardado = null;
+                    string? campoIdEncontrado = null;
+
+                    // Construir cláusulas WHERE usando parámetros distintos para evitar colisión con el comando anterior
+                    var whereClauses = datosFinales.Keys.Select(k => $"`{k}` = @{k}_sel");
+                    string consultaSelect = $"SELECT * FROM `{nombreTabla}` WHERE {string.Join(" AND ", whereClauses)} ORDER BY ";
+                    
+                    // Agregar ORDER BY para el campo ID si existe
+                    var campoIdParaOrden = posiblesCamposId.FirstOrDefault(campo => datosFinales.ContainsKey(campo)) ?? posiblesCamposId[0];
+                    consultaSelect += $"`{campoIdParaOrden}` DESC LIMIT 1;";
+
+                    using var comandoSelect = new MySqlCommand(consultaSelect, conexion);
+
+                    // Agregar parámetros para la consulta SELECT (usar mismos valores insertados)
+                    foreach (var kvp in datosFinales)
+                    {
+                        comandoSelect.Parameters.AddWithValue($"@{kvp.Key}_sel", kvp.Value ?? DBNull.Value);
+                    }
+
+                    using var lectorSelect = await comandoSelect.ExecuteReaderAsync();
+                    if (await lectorSelect.ReadAsync())
+                    {
+                        registroGuardado = new Dictionary<string, object?>();
+                        for (int i = 0; i < lectorSelect.FieldCount; i++)
+                        {
+                            string nombreCol = lectorSelect.GetName(i);
+                            object? valorCol = lectorSelect.IsDBNull(i) ? null : lectorSelect.GetValue(i);
+                            registroGuardado[nombreCol] = valorCol;
+                        }
+
+                        // Buscar y capturar el ID principal según la jerarquía de campos
+                        foreach (var campoId in posiblesCamposId)
+                        {
+                            if (registroGuardado.ContainsKey(campoId) && registroGuardado[campoId] != null)
+                            {
+                                idPrincipalGuardado = registroGuardado[campoId];
+                                campoIdEncontrado = campoId;
+                                break;
+                            }
+                        }
+
+                        _logger.LogInformation($"Registro recuperado tras inserción en '{nombreTabla}'.");
+                        //_logger.LogInformation($"Datos del registro insertado: {string.Join(", ", registroGuardado.Select(kvp => $"{kvp.Key}={kvp.Value}"))}");
+                        
+                        if (idPrincipalGuardado != null && campoIdEncontrado != null)
+                        {
+                            _logger.LogInformation($"ID principal capturado: {campoIdEncontrado}={idPrincipalGuardado}");
+                        }
+                        else
+                        {
+                            _logger.LogWarning($"No se pudo identificar un campo ID principal en la tabla '{nombreTabla}'");
+                        }
+                    }
+
+                    // ahora 'registroGuardado' contiene la primera fila que coincide (o null si no se encontró)
+                    // y 'idPrincipalGuardado' contiene el valor del ID principal identificado
+                    
+                    return (exito: true, idPrincipal: idPrincipalGuardado, campoId: campoIdEncontrado, registro: registroGuardado);
+                }
+                
+                return (exito: false, idPrincipal: null, campoId: null, registro: null);
             }
             catch (MySqlException excepcionSql)
             {

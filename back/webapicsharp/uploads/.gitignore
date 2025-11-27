@@ -1,0 +1,10 @@
+# Ignorar todas las imágenes subidas pero mantener la estructura de carpetas
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.bmp
+*.webp
+
+# Mantener el archivo .gitkeep
+!.gitkeep

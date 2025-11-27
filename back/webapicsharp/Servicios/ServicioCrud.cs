@@ -381,7 +381,7 @@ namespace webapicsharp.Servicios
         /// Proceso: Validación → Normalización → Delegación al repositorio
         /// Aplica las mismas validaciones de seguridad que los métodos de consulta.
         /// </summary>
-        public async Task<bool> CrearAsync(
+        public async Task<(bool exito, object? idPrincipal, string? campoId, Dictionary<string, object?>? registro)> CrearAsync(
             string nombreTabla,
             string? esquema,
             Dictionary<string, object?> datos,

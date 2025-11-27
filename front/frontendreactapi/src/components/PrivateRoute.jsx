@@ -2,7 +2,7 @@ import React from "react";
 import { Navigate , Outlet} from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
-export  const PrivateRoute = ({children, roles}) => {
+export const PrivateRoute = ({children, roles}) => {
     const { rol, loading } = useAuth();
     const rols = {
         'Administrador': 1,

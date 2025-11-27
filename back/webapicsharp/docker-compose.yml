@@ -72,7 +72,7 @@ services:
       MYSQL_PASSWORD: test
       MYSQL_ROOT_PASSWORD: test
     ports:
-      - "3306:3306"
+      - "3301:3306"
     volumes:
       - ./docker/db/mariadb.sql:/docker-entrypoint-initdb.d/mariadb.sql
       - ./docker/db/init-mariadb.sh:/docker-entrypoint-initdb.d/init-mariadb.sh
@@ -86,7 +86,7 @@ services:
     links:
       - mariadb:mariadb
     ports:
-      - 8089:80
+      - 8088:80
     restart: always
     environment:
         PMA_HOST: mariadb

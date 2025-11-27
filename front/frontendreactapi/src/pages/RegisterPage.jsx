@@ -6,20 +6,52 @@ export const RegisterPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [avatar, setAvatar] = useState("");
+  const [avatarFile, setAvatarFile] = useState(null);
+  const [avatarPreview, setAvatarPreview] = useState("");
   const navigate = useNavigate();
-  const { register, loading } = useAuth();
+  const { register, loading, uploadImage } = useAuth();
   const [error, setError] = useState(null);
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setAvatarFile(file);
+      setAvatar(file.name); // Solo guardamos el nombre original para mostrar
+
+      // Crear preview de la imagen
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setAvatarPreview(e.target.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError(null); // Limpiar errores previos
+    
     try {
-     const result = await register(email, password, avatar, 0);
-     console.log("Registro completado:", result);
-     if(result && result.estado == 200){
-         navigate("/"); // Redirigir a la página de inicio después del registro
-     }
+      let avatarFileName = "";
+      
+      if (avatarFile) {
+        // Subir la imagen al servidor y obtener el nombre del archivo
+        const uploadResult = await uploadImage(avatarFile, email);
+        avatarFileName = uploadResult.fileName || uploadResult.nombre || avatarFile.name;
+        console.log("Imagen subida con nombre:", avatarFileName);
+      }
+      
+      // Registrar el usuario con el nombre del archivo de imagen
+      const result = await register(email, password, avatarFileName, 0);
+      console.log("Registro completado:", result);
+      
+      if (result && result.estado === 200) {
+        navigate("/login"); // Redirigir al login después del registro
+      }
     } catch (error) {
       console.error("Error al registrar usuario:", error);
-       setError("Invalid username or password");
+      setError(error.message || "Error al registrar usuario. Intenta nuevamente.");
     }
   };
    if (loading) {
@@ -53,16 +85,32 @@ return (
                 <p className="text-center">Your Social Campaigns</p>
                 <form onSubmit={handleSubmit}>
                   <div className="mb-3">
-                    <label htmlFor="exampleInputtext1" className="form-label">Name</label>
+                    <label htmlFor="exampleInputtext1" className="form-label">Avatar</label>
                     <input 
-                    type="text" 
+                    type="file" 
                     className="form-control" 
                     id="exampleInputtext1"
                     aria-describedby="textHelp"
-                    value={avatar}
-                    onChange={(e) => {setAvatar(e.target.value)}}
-                    required
+                    onChange={handleFileChange}
+                    accept="image/*"
                     />
+                    {avatarPreview && (
+                      <div className="mt-3 text-center">
+                        <img 
+                          src={avatarPreview} 
+                          alt="Preview" 
+                          style={{
+                            width: '100px', 
+                            height: '100px', 
+                            objectFit: 'cover', 
+                            borderRadius: '50%',
+                            border: '2px solid #ddd'
+                          }} 
+                        />
+                        <p className="mt-2 text-muted">{avatar}</p>
+                      </div>
+                    )}
+                    <div className="form-text">Selecciona una imagen para tu avatar (JPG, PNG, GIF)</div>
                   </div>
                   <div className="mb-3">
                     <label htmlFor="exampleInputEmail1" className="form-label">Email Address</label>

@@ -40,6 +40,12 @@ builder.Configuration.AddJsonFile(
 // Agrega soporte para controladores. Los controladores viven en la carpeta "Controllers".
 builder.Services.AddControllers();
 
+// Configuración para manejar archivos grandes
+builder.Services.Configure<IISServerOptions>(options =>
+{
+    options.MaxRequestBodySize = 10 * 1024 * 1024; // 10MB
+});
+
 //CORS (Cross-Origin Resource Sharing) Intercambio de recursos de origen cruzado
 // permite que la API sea consumida desde otros dominios.
 // Agrega CORS con una política genérica llamada "PermitirTodo".

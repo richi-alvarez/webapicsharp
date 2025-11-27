@@ -16,7 +16,7 @@ const useFetch = (url, method = 'GET') => {
         setLoadingState(true);
         const CONNECTION_ERROR_MSG = "Connection error";
 
-        var requestUrl = `${BASE_URL+"/"+url}`;
+        var requestUrl = `${BASE_URL}/${url}`;
 
         const headers = {
           "Content-type": "application/json"
@@ -41,13 +41,30 @@ const useFetch = (url, method = 'GET') => {
                     headers: headers
                 });
             }else{
-                var response = await fetch(requestUrl, {
-                    method: method,
-                    headers: headers,
-                    body: JSON.stringify(body),
-                });
+                if(url.includes("Upload/avatar")){
+                    // Para subida de archivos, NO establecer Content-Type manualmente
+                    // El browser establece automáticamente multipart/form-data con boundary
+                    const uploadHeaders = {
+                        'accept': '*/*'
+                    };
+                    if(authToken){
+                        uploadHeaders["Authorization"] = authToken;
+                    }
+                    // Verificar que body es FormData
+                    console.log("Enviando FormData:", body instanceof FormData);
+                    var response = await fetch(requestUrl, {
+                        method: method,
+                        headers: uploadHeaders,
+                        body: body, // body debe ser FormData
+                    });
+                }else{
+                    var response = await fetch(requestUrl, {
+                        method: method,
+                        headers: headers,
+                        body: JSON.stringify(body),
+                    });
+                }
             }
-            
             if (!response.ok) {
                 const data = await response.json();
                 //errorCb(data.mensaje || "Request failed", data.estado || response.status);
