@@ -1,4 +1,4 @@
-import React, {createContext, useContext, useState, useEffect, use} from "react";
+import React, {createContext, useContext, useState, useEffect, useCallback} from "react";
 import useFetch from "../hooks/useFetch";
 
 const AuthContext = createContext();
@@ -14,10 +14,11 @@ export const AuthProvider = ({children}) => {
     const [charging, makeActivedAvatar] = useFetch("Usuario/verificar-contrasena?esquema=valor", "POST");
     const [isGettingUser, getUser] = useFetch("Usuario/Email", "GET");
     const [isSarchingRol, getRol] = useFetch(`Usuario_rol/IdUsuario`, "GET");
+    const [isSearchingImage, getAvatarImage] = useFetch(`Upload/avatar/${rutaAvatar}`, "GET");
     const [ isSettingRole, setRoleRequest ] = useFetch("Usuario_rol", "POST");
     const [logining, makeLogin] = useFetch("Autenticacion/token", "POST");
     const [isUpdatingImage, updateImage] = useFetch("Upload/avatar", "POST");
-    const loading = registing || logining || charging || isSarchingRol || isLoading || isGettingUser || isUpdatingImage || isSettingRole;
+    const loading = registing || logining || charging || isSarchingRol || isLoading || isGettingUser || isUpdatingImage || isSettingRole || isSearchingImage;
     useEffect(() => {
         const storedToken = localStorage.getItem("authToken");
         if (storedToken) {
@@ -294,9 +295,22 @@ const uploadImage = async (file, email) => {
     });
 }
 
+const getImage = useCallback((rutaAvatar, email) => {
+    const apiUrl = process.env.REACT_APP_API_URL;
+    if(rutaAvatar){
+        return `${apiUrl}/Upload/avatar/${rutaAvatar}`;
+    }else{
+        if(email){
+            const defaultAvatarUrl = `${apiUrl}/Upload/avatar/by-email/${email}`;
+            return defaultAvatarUrl;
+        }else{
+            return null;
+        }
+    }
+}, [rutaAvatar]);
 
     return (
-        <AuthContext.Provider value={{token, rol, idUsuario, login, logout, uploadImage, loading, register, activedAvatar}}>
+        <AuthContext.Provider value={{token, rol, idUsuario, login, logout, uploadImage, loading, register, activedAvatar, getImage}}>
             {children}
         </AuthContext.Provider>
     );

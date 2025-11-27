@@ -9,7 +9,7 @@ root.render(
   <React.StrictMode>
     <div style={{position:"relative", display:"flex", flexDirection:"column"}}>
       <div style={{backgroundImage: ` linear-gradient(180deg, rgb(5, 39, 103) 0%, #3a0647 70%)`,}} >
-          header
+          
       </div>
     </div>
     <App />
