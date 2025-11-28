@@ -101,3 +101,4 @@
 /home/epayco21/Escritorio/itm/webapicsharp/back/webapicsharp/obj/Release/net9.0/webapicsharp.pdb
 /home/epayco21/Escritorio/itm/webapicsharp/back/webapicsharp/obj/Release/net9.0/webapicsharp.genruntimeconfig.cache
 /home/epayco21/Escritorio/itm/webapicsharp/back/webapicsharp/obj/Release/net9.0/ref/webapicsharp.dll
+/home/epayco21/Escritorio/itm/webapicsharp/back/webapicsharp/bin/Release/net9.0/web.config
