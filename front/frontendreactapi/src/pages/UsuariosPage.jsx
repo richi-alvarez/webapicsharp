@@ -17,7 +17,7 @@ const UsuarioRow = memo(({ usuario, onEdit, onDelete, token }) => (
 ));
 
 function UsuariosPage() {
-    const { token } = useAuth();
+    const { token,uploadImage } = useAuth();
     const [usuarios, setUsuarios] = useState([]);
     const [usuarioActual, setUsuarioActual] = useState({
         Id: 0,
@@ -26,9 +26,27 @@ function UsuariosPage() {
         RutaAvatar: '',
         Activo: false,
     });
+    const [avatar, setAvatar] = useState("");
+    const [avatarFile, setAvatarFile] = useState(null);
+    const [avatarPreview, setAvatarPreview] = useState("");
     const [esEdicion, setEsEdicion] = useState(false);
     const [mensaje, setMensaje] = useState('');
     const [cargando, setCargando] = useState(false);
+
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+        setAvatarFile(file);
+        setAvatar(file.name); // Solo guardamos el nombre original para mostrar
+
+        // Crear preview de la imagen
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            setAvatarPreview(e.target.result);
+        };
+        reader.readAsDataURL(file);
+        }
+    };
 
     // ✅ useCallback mantiene la referencia estable
     const cargarUsuarios = useCallback(async () => {
@@ -78,6 +96,14 @@ function UsuariosPage() {
             e.preventDefault();
             try {
                 if (!esEdicion) {
+                    let avatarFileName = "";
+                    if (avatarFile) {
+                        // Subir la imagen al servidor y obtener el nombre del archivo
+                        const uploadResult = await uploadImage(avatarFile, usuarioActual.Email);
+                        avatarFileName = uploadResult.fileName || uploadResult.nombre || avatarFile.name;
+                        console.log("Imagen subida con nombre:", avatarFileName);
+                    }
+                    usuarioActual.RutaAvatar = avatarFileName;
                     await post('/Usuario?esquema=valor&camposEncriptar=Contrasena',usuarioActual, token);
                     setMensaje('Usuario creado correctamente.');
                 } else {
@@ -142,10 +168,35 @@ function UsuariosPage() {
                 <label for="exampleInputPassword1" class="form-label">Contraseña:</label>
                 <input type="password" class="form-control" name="Contrasena" value={usuarioActual.Contrasena} onChange={manejarCambio} />
             </div>
-            <div class="mb-3">
-                <label for="exampleInputAvatar1" class="form-label" >Ruta Avatar:</label>
-                <input name="RutaAvatar" class="form-control" value={usuarioActual.RutaAvatar} onChange={manejarCambio} />
-            </div>
+            <div className="mb-3">
+                <label htmlFor="exampleInputAvatar1" className="form-label">Avatar</label>
+                    <input 
+                    ame="RutaAvatar"
+                    type="file" 
+                    className="form-control" 
+                    id="exampleInputtext1"
+                    aria-describedby="textHelp"
+                    onChange={handleFileChange}
+                    accept="image/*"
+                    />
+                    {avatarPreview && (
+                      <div className="mt-3 text-center">
+                        <img 
+                          src={avatarPreview} 
+                          alt="Preview" 
+                          style={{
+                            width: '100px', 
+                            height: '100px', 
+                            objectFit: 'cover', 
+                            borderRadius: '50%',
+                            border: '2px solid #ddd'
+                          }} 
+                        />
+                        <p className="mt-2 text-muted">{avatar}</p>
+                      </div>
+                    )}
+                    <div className="form-text">Selecciona una imagen para tu avatar (JPG, PNG, GIF)</div>
+                  </div>
             <div class="mb-3 form-check">
                 <label for="exampleInputActivo1" class="form-check-label">Activo:</label>
                 <input type="checkbox" class="form-check-input" name="Activo" checked={usuarioActual.Activo} onChange={manejarCambio} />

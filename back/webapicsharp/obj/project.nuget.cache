@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "Hw7v/ACMBg4=",
+  "dgSpecHash": "sqCU+WirVoM=",
   "success": true,
-  "projectFilePath": "/home/epayco21/Escritorio/webapicsharp/back/webapicsharp/webapicsharp.csproj",
+  "projectFilePath": "/home/epayco21/Escritorio/itm/webapicsharp/back/webapicsharp/webapicsharp.csproj",
   "expectedPackageFiles": [
     "/home/epayco21/.nuget/packages/azure.core/1.47.1/azure.core.1.47.1.nupkg.sha512",
     "/home/epayco21/.nuget/packages/azure.identity/1.14.2/azure.identity.1.14.2.nupkg.sha512",

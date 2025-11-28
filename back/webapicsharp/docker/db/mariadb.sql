@@ -90,6 +90,22 @@ VALUES
 ('maria.gomez@example.com', 'maria123', '/avatars/maria.png', TRUE),
 ('carlos.lopez@example.com', 'carlos2024', '/avatars/carlos.png', FALSE);
 
+CREATE TABLE Rol ( 
+    Id INT NOT NULL AUTO_INCREMENT, 
+    nombre VARCHAR(255) NOT NULL, 
+    PRIMARY KEY (Id) 
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+INSERT INTO Rol (nombre) VALUES ('Administrador'),('User');
+
+CREATE TABLE Usuario_rol (
+    IdUsuario INT NOT NULL,
+    IdRol INT NOT NULL,
+    PRIMARY KEY (IdUsuario, IdRol),
+    CONSTRAINT FK_UsuarioRol_Usuario FOREIGN KEY (IdUsuario) REFERENCES Usuario(Id) ON DELETE CASCADE,
+    CONSTRAINT FK_UsuarioRol_Rol FOREIGN KEY (IdRol) REFERENCES Rol(Id) ON DELETE CASCADE
+);
+
 CREATE TABLE TipoResponsable (
     Id INT NOT NULL AUTO_INCREMENT,
     Titulo VARCHAR(50) NOT NULL,
@@ -278,17 +294,6 @@ INSERT INTO Proyecto_Producto (IdProyecto, IdProducto, FechaAsociacion) VALUES
   (2, 2, '2025-11-20'),
   (3, 3, '2025-12-05');
 
--- 
-
-
-
-
-
-
-
-
-
-
 
 CREATE TABLE Entregable (
     Id INT NOT NULL AUTO_INCREMENT,
@@ -336,7 +341,6 @@ INSERT INTO Producto_Entregable (IdProducto, IdEntregable, FechaAsociacion) VALU
   (2, 2, '2025-11-17'), -- Servidor Rack -> Diseño de BD
   (3, 3, '2025-12-02'); -- Soporte Premium -> Prototipo Funcional
 
-
 CREATE TABLE Responsable_Entregable (
     IdResponsable INT NOT NULL,
     IdEntregable INT NOT NULL,
@@ -358,6 +362,13 @@ INSERT INTO Responsable_Entregable (IdResponsable, IdEntregable, FechaAsociacion
   (1, 1, '2025-11-01'), -- Juan Pérez -> Análisis de Requisitos
   (2, 2, '2025-11-16'), -- María Gómez -> Diseño de BD
   (3, 3, '2025-12-01'); -- Carlos López -> Prototipo Funcional
+
+
+
+
+
+
+
 
 CREATE TABLE Archivo (
     Id INT NOT NULL AUTO_INCREMENT,
@@ -600,4 +611,6 @@ INSERT INTO Meta_Proyecto (IdMeta, IdProyecto, FechaAsociacion) VALUES
   (1, 1, '2025-11-01'), -- Aumentar ventas Q4 en 15% -> Sitio corporativo
   (2, 2, '2025-11-15'), -- NPS superior a 80 puntos -> App móvil clientes
   (3, 3, '2025-12-01'); -- Automatizar 5 procesos clave -> Automatización logística
+
+
 
