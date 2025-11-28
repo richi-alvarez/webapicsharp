@@ -517,7 +517,7 @@ namespace webapicsharp.Repositorios
         /// Implementa la inserción de registro para Postgres con soporte para encriptación BCrypt.
         /// Construye y ejecuta: INSERT INTO [esquema].[tabla] (columnas) VALUES (@param1, @param2, ...)
         /// </summary>
-        public async Task<bool> CrearAsync(
+        public async Task<(bool exito, object? idPrincipal, string? campoId, Dictionary<string, object?>? registro)> CrearAsync(
             string nombreTabla,
             string? esquema,
             Dictionary<string, object?> datos,
@@ -597,7 +597,33 @@ namespace webapicsharp.Repositorios
 
                 // Ejecutar inserción y verificar que se insertó al menos un registro
                 int filasAfectadas = await comando.ExecuteNonQueryAsync();
-                return filasAfectadas > 0;
+                
+                if (filasAfectadas > 0)
+                {
+                    // Lista de posibles campos ID ordenados por prioridad
+                    var posiblesCamposId = new[] { "Id", "IdUsuario", "IdProyectoPadre", "IdProyecto", "IdTipoProducto", "Codigo", "IdProducto", "IdResponsable" };
+                    
+                    // Para PostgreSQL, intentar recuperar el registro y capturar ID
+                    object? idPrincipalGuardado = null;
+                    string? campoIdEncontrado = null;
+                    Dictionary<string, object?>? registroGuardado = null;
+                    
+                    // Buscar campo ID en los datos insertados
+                    foreach (var campoId in posiblesCamposId)
+                    {
+                        if (datosFinales.ContainsKey(campoId) && datosFinales[campoId] != null)
+                        {
+                            idPrincipalGuardado = datosFinales[campoId];
+                            campoIdEncontrado = campoId;
+                            registroGuardado = new Dictionary<string, object?>(datosFinales);
+                            break;
+                        }
+                    }
+                    
+                    return (exito: true, idPrincipal: idPrincipalGuardado, campoId: campoIdEncontrado, registro: registroGuardado);
+                }
+                
+                return (exito: false, idPrincipal: null, campoId: null, registro: null);
             }
             catch (Npgsql.PostgresException excepcionPg)
             {

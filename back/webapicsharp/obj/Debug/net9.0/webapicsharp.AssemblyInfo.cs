@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("webapicsharp")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f42aaab111e19ec7bd9ac928d8cafa6e4e510c83")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c876efa65f622ab8d3e16a152d9c257395b686ac")]
 [assembly: System.Reflection.AssemblyProductAttribute("webapicsharp")]
 [assembly: System.Reflection.AssemblyTitleAttribute("webapicsharp")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

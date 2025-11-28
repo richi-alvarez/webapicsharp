@@ -551,13 +551,13 @@ namespace webapicsharp.Controllers
                 }
 
                 // DELEGACIÓN AL SERVICIO (aplicando SRP y DIP)
-                bool creado = await _servicioCrud.CrearAsync(tabla, esquema, datosConvertidos, camposEncriptar);
+                var creado = await _servicioCrud.CrearAsync(tabla, esquema, datosConvertidos, camposEncriptar);
 
-                if (creado)
+                if (creado.exito)
                 {
                     _logger.LogInformation(
-                        "ÉXITO creación - Registro creado en tabla {Tabla}",
-                        tabla
+                        "ÉXITO creación - Registro creado en tabla {Tabla}, ID: {IdPrincipal}, Campo: {CampoId}",
+                        tabla, creado.idPrincipal, creado.campoId
                     );
 
                     return Ok(new
@@ -565,7 +565,14 @@ namespace webapicsharp.Controllers
                         estado = 200,
                         mensaje = "Registro creado exitosamente.",
                         tabla = tabla,
-                        esquema = esquema ?? "por defecto"
+                        esquema = esquema ?? "por defecto",
+                        data = new
+                        {
+                            exito = creado.exito,
+                            idPrincipal = creado.idPrincipal,
+                            campoId = creado.campoId,
+                            registro = creado.registro
+                        }
                     });
                 }
                 else
