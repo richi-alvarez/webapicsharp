@@ -1,7 +1,13 @@
 /home/epayco21/Escritorio/itm/webapicsharp/back/webapicsharp/publish/webapicsharp
+/home/epayco21/Escritorio/itm/webapicsharp/back/webapicsharp/publish/publish/web.config
 /home/epayco21/Escritorio/itm/webapicsharp/back/webapicsharp/publish/web.config
 /home/epayco21/Escritorio/itm/webapicsharp/back/webapicsharp/publish/appsettings.Development.json
 /home/epayco21/Escritorio/itm/webapicsharp/back/webapicsharp/publish/appsettings.json
+/home/epayco21/Escritorio/itm/webapicsharp/back/webapicsharp/publish/publish/appsettings.Development.json
+/home/epayco21/Escritorio/itm/webapicsharp/back/webapicsharp/publish/publish/appsettings.json
+/home/epayco21/Escritorio/itm/webapicsharp/back/webapicsharp/publish/publish/webapicsharp.deps.json
+/home/epayco21/Escritorio/itm/webapicsharp/back/webapicsharp/publish/publish/webapicsharp.runtimeconfig.json
+/home/epayco21/Escritorio/itm/webapicsharp/back/webapicsharp/publish/publish/webapicsharp.staticwebassets.endpoints.json
 /home/epayco21/Escritorio/itm/webapicsharp/back/webapicsharp/publish/webapicsharp.dll
 /home/epayco21/Escritorio/itm/webapicsharp/back/webapicsharp/publish/webapicsharp.deps.json
 /home/epayco21/Escritorio/itm/webapicsharp/back/webapicsharp/publish/webapicsharp.runtimeconfig.json

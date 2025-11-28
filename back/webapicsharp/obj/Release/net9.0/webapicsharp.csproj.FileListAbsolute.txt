@@ -102,3 +102,9 @@
 /home/epayco21/Escritorio/itm/webapicsharp/back/webapicsharp/obj/Release/net9.0/webapicsharp.pdb
 /home/epayco21/Escritorio/itm/webapicsharp/back/webapicsharp/obj/Release/net9.0/webapicsharp.genruntimeconfig.cache
 /home/epayco21/Escritorio/itm/webapicsharp/back/webapicsharp/obj/Release/net9.0/ref/webapicsharp.dll
+/home/epayco21/Escritorio/itm/webapicsharp/back/webapicsharp/bin/Release/net9.0/publish/web.config
+/home/epayco21/Escritorio/itm/webapicsharp/back/webapicsharp/bin/Release/net9.0/publish/appsettings.Development.json
+/home/epayco21/Escritorio/itm/webapicsharp/back/webapicsharp/bin/Release/net9.0/publish/appsettings.json
+/home/epayco21/Escritorio/itm/webapicsharp/back/webapicsharp/bin/Release/net9.0/publish/webapicsharp.deps.json
+/home/epayco21/Escritorio/itm/webapicsharp/back/webapicsharp/bin/Release/net9.0/publish/webapicsharp.runtimeconfig.json
+/home/epayco21/Escritorio/itm/webapicsharp/back/webapicsharp/bin/Release/net9.0/publish/webapicsharp.staticwebassets.endpoints.json
