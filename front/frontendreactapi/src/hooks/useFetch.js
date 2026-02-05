@@ -1,9 +1,7 @@
 import { useState, useCallback } from "react";
 
 // Debug: Verificar que la variable de entorno se está cargando
-console.log("🔧 Variable de entorno REACT_APP_API_URL:", process.env.REACT_APP_API_URL);
-
-const apiUrl = process.env.REACT_APP_API_URL;
+const apiUrl = process.env.REACT_APP_API_URL || 'http://proyectositm-10221.runasp.net/api';
 const BASE_URL = apiUrl;
 
 console.log("🌐 BASE_URL configurada:", BASE_URL);

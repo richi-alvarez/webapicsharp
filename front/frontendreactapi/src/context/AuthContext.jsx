@@ -296,7 +296,7 @@ const uploadImage = async (file, email) => {
 }
 
 const getImage = useCallback((rutaAvatar, email) => {
-    const apiUrl = process.env.REACT_APP_API_URL;
+    const apiUrl = process.env.REACT_APP_API_URL || 'http://proyectositm-10221.runasp.net/api';
     if(rutaAvatar){
         return `${apiUrl}/Upload/avatar/${rutaAvatar}`;
     }else{

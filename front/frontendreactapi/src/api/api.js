@@ -1,4 +1,4 @@
-const apiUrl = process.env.REACT_APP_API_URL;
+const apiUrl = process.env.REACT_APP_API_URL || 'http://proyectositm-10221.runasp.net/api';
 
 const BASE_URL = apiUrl;
 

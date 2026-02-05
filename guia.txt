@@ -100,3 +100,5 @@ npm install
 
 *correr proyecto
 npm run start
+
+*kubernetes

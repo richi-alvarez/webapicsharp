@@ -1,0 +1,29 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: webapicsharp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: webapicsharp
+  template:
+    metadata:
+      labels:
+        app: webapicsharp
+    spec:
+      containers:
+        - name: webapicsharp-container
+          image: webapicsharp:1.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5031
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: "Development"
+            #- name: ConnectionStrings__Postgres
+            #  value: "Host=postgresdb;Port=5432;Database=postgresdb;Username=sa;Password=test;Pooling=true;Maximum Pool Size=100;"
+            - name: ConnectionStrings__MariaDB
+              value: "Server=mariadb;Port=3306;Database=mariadb;User=root;Password=test;"
+            - name: DatabaseProvider
+              value: "MariaDB"

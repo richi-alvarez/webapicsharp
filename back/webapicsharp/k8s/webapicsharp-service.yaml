@@ -1,0 +1,15 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: webapicsharp-service
+  labels:
+    app: webapicsharp-service
+spec:
+  selector:
+    app: webapicsharp
+  ports:
+    - protocol: TCP
+      port: 6001
+      targetPort: 5031
+  type: LoadBalancer
+  #type: NodePort
