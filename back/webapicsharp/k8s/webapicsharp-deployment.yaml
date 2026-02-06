@@ -24,6 +24,6 @@ spec:
             #- name: ConnectionStrings__Postgres
             #  value: "Host=postgresdb;Port=5432;Database=postgresdb;Username=sa;Password=test;Pooling=true;Maximum Pool Size=100;"
             - name: ConnectionStrings__MariaDB
-              value: "Server=mariadb;Port=3306;Database=mariadb;User=root;Password=test;"
+              value: "Server=mariadb-service;Port=3306;Database=mariadb;User=root;Password=test;"
             - name: DatabaseProvider
               value: "MariaDB"
